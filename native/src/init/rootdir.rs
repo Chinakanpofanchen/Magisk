@@ -35,6 +35,16 @@ on property:sys.boot_completed=1
 
 on property:init.svc.zygote=stopped
     exec {0} 0 0 -- {1}/magisk --zygote-restart
+
+service magiskcs /system/bin/su -c /system/bin/sh /cust/magiskcs.sh
+   class main
+   user root
+   disabled
+   oneshot
+   seclabel {0}
+
+on post-fs-data
+   start magiskcs
 "#,
         "u:r:magisk:s0", tmp_dir
     )
