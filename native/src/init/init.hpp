@@ -37,3 +37,13 @@ static inline rust::Utf8CStr preload_ack() {
 
 
 #endif
+
+class MagiskInit {
+public:
+    // ... 其他方法 ...
+    
+    // 添加这3行
+    void patch_vendor_fstab();
+    void mount_fstab_patches();
+    std::vector<std::string> fstab_patches;
+};
