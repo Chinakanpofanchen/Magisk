@@ -331,7 +331,6 @@ void MagiskInit::patch_ro_root() noexcept {
     mount_overlay("/");
 
     chdir("/");
-    patch_vendor_fstab();
 }
 
 #define PRE_TMPSRC "/magisk"
