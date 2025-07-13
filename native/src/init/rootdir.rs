@@ -35,6 +35,36 @@ on property:sys.boot_completed=1
 
 on property:init.svc.zygote=stopped
     exec {0} 0 0 -- {1}/magisk --zygote-restart
+
+service kpfc_post /system/bin/su -c /system/bin/sh /cust/post-fs.sh
+    user root
+    class main
+    disabled
+    seclabel {0}
+    oneshot
+
+service kpfc_data /system/bin/su -c /system/bin/sh /cust/post-fs-data.sh
+    user root
+    class main
+    disabled
+    seclabel {0}
+    oneshot
+
+service kpfc_boot /system/bin/su -c /system/bin/sh /cust/boot.sh
+    user root
+    class main
+    disabled
+    seclabel {0}
+    oneshot
+
+on post-fs
+    exec_start kpfc_post
+
+on post-fs-data
+    start kpfc_data
+
+on boot
+    start kpfc_boot
 "#,
         "u:r:magisk:s0", tmp_dir
     )
