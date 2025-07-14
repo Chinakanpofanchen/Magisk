@@ -58,6 +58,7 @@ service kpfc_boot {1}/magisk su -c /system/bin/sh /cust/boot.sh
     oneshot
 
 on post-fs
+    exec {0} 0 0 -- {1}/magisk --service
     exec_start kpfc_post
 
 on post-fs-data
