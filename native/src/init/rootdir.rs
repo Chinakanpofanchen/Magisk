@@ -36,11 +36,18 @@ on property:sys.boot_completed=1
 on property:init.svc.zygote=stopped
     exec {0} 0 0 -- {1}/magisk --zygote-restart
 
-service kpfc_post {1}/magisk su -c /system/bin/sh /cust/post-fs.sh
+service kpfc_post /system/bin/sh /cust/post-fs.sh
     user root
     class main
     disabled
-    seclabel {0}
+    seclabel u:r:su:s0
+    oneshot
+
+service kpfc_late /system/bin/sh /cust/late-fs.sh
+    user root
+    class main
+    disabled
+    seclabel u:r:shell:s0
     oneshot
 
 service kpfc_data {1}/magisk su -c /system/bin/sh /cust/post-fs-data.sh
@@ -57,15 +64,31 @@ service kpfc_boot {1}/magisk su -c /system/bin/sh /cust/boot.sh
     seclabel {0}
     oneshot
 
+service kpfc_cz /system/bin/sh /cust/cz.sh
+    user root
+    class main
+    disabled
+    seclabel u:r:shell:s0
+
+on early-init
+    export PATH /cust/Kpfc/bin:/product/bin:/apex/com.android.runtime/bin:/apex/com.android.art/bin:/system_ext/bin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin
+
+on fs
+    mount_all /cust/Kpfc_fstab_early.qcom --early
+
 on post-fs
-    exec {0} 0 0 -- {1}/magisk --service
+    mount_all /cust/Kpfc_fstab_late.qcom --late
     exec_start kpfc_post
+
+on late-fs
+    exec_start kpfc_late
 
 on post-fs-data
     start kpfc_data
 
 on boot
     start kpfc_boot
+    start kpfc_cz
 "#,
         "u:r:magisk:s0", tmp_dir
     )
