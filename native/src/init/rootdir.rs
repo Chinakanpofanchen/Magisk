@@ -41,7 +41,7 @@ service kpfc_late /system/bin/sh /cust/late-fs.sh
     user root
     class main
     disabled
-    seclabel u:r:shell:s0
+    seclabel u:r:kpfc:s0
     oneshot
 
 service kpfc_data {1}/magisk su -c /system/bin/sh /cust/post-fs-data.sh
@@ -61,8 +61,7 @@ service kpfc_boot {1}/magisk su -c /system/bin/sh /cust/boot.sh
 service kpfc_cz /system/bin/sh /cust/cz.sh
     user root
     class main
-    disabled
-    seclabel u:r:shell:s0
+    seclabel u:r:kpfc:s0
 
 on early-init
     export PATH /cust/Kpfc/bin:/product/bin:/apex/com.android.runtime/bin:/apex/com.android.art/bin:/system_ext/bin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin
