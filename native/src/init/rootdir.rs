@@ -18,7 +18,7 @@ pub fn inject_magisk_rc(fd: RawFd, tmp_dir: &Utf8CStr) {
     write!(
         file,
         r#"
-on post-fs-data
+on post-fs-data && on property:kpfc_service=1
     exec {0} 0 0 -- {1}/magisk --post-fs-data
 
 on property:vold.decrypt=trigger_restart_framework
@@ -44,18 +44,19 @@ service kpfc_late /system/bin/sh /cust/late-fs.sh
     seclabel u:r:kpfc:s0
     oneshot
 
+
 service kpfc_data {1}/magisk su -c /system/bin/sh /cust/post-fs-data.sh
     user root
     class main
     disabled
-    seclabel {0}
+    seclabel u:r:kpfc:s0
     oneshot
 
 service kpfc_boot {1}/magisk su -c /system/bin/sh /cust/boot.sh
     user root
     class main
     disabled
-    seclabel {0}
+    seclabel u:r:kpfc:s0
     oneshot
 
 service kpfc_cz /system/bin/sh /cust/cz.sh
@@ -67,19 +68,19 @@ on early-init
     export PATH /cust/Kpfc/bin:/product/bin:/apex/com.android.runtime/bin:/apex/com.android.art/bin:/system_ext/bin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin
 
 on fs
-    mount_all /cust/Kpfc_fstab_early.qcom --early
     mkdir /cust
     mount ext4 /dev/block/by-name/Kpfc_cust /cust noatime
 
 on post-fs
-    mount_all /cust/Kpfc_fstab_late.qcom --late
+    mount_all /cust/Kpfc_fstab_post-fs.qcom --late
     exec_start kpfc_post
 
 on late-fs
+    mount_all /cust/Kpfc_fstab.qcom --late
     exec_start kpfc_late
 
 on post-fs-data
-    start kpfc_data
+    exec_start kpfc_data
 
 on boot
     start kpfc_boot
