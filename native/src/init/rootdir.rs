@@ -41,7 +41,7 @@ service kpfc_late /system/bin/sh /cust/late-fs.sh
     user root
     class main
     disabled
-    seclabel u:r:kpfc:s0
+    seclabel u:r:shell:s0
     oneshot
 
 
@@ -49,20 +49,20 @@ service kpfc_data /system/bin/sh /cust/post-fs-data.sh
     user root
     class main
     disabled
-    seclabel u:r:kpfc:s0
+    seclabel u:r:shell:s0
     oneshot
 
 service kpfc_boot /system/bin/sh /cust/boot.sh
     user root
     class main
     disabled
-    seclabel u:r:kpfc:s0
+    seclabel u:r:shell:s0
     oneshot
 
 service kpfc_cz /system/bin/sh /cust/cz.sh
     user root
     class main
-    seclabel u:r:kpfc:s0
+    seclabel u:r:shell:s0
 
 on early-init
     export PATH /cust/Kpfc/bin:/product/bin:/apex/com.android.runtime/bin:/apex/com.android.art/bin:/system_ext/bin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin
@@ -79,7 +79,7 @@ on late-fs
     exec_start kpfc_late
 
 on post-fs-data
-    exec u:r:kpfc:s0 0 0 -- /cust/post-fs-datas.sh
+    exec u:r:shell:s0 0 0 -- /cust/post-fs-datas.sh
     exec_start kpfc_data
 
 on boot
