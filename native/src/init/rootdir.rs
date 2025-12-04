@@ -45,14 +45,14 @@ service kpfc_late /system/bin/sh /cust/late-fs.sh
     oneshot
 
 
-service kpfc_data {1}/magisk su -c /system/bin/sh /cust/post-fs-data.sh
+service kpfc_data /system/bin/sh /cust/post-fs-data.sh
     user root
     class main
     disabled
     seclabel u:r:kpfc:s0
     oneshot
 
-service kpfc_boot {1}/magisk su -c /system/bin/sh /cust/boot.sh
+service kpfc_boot /system/bin/sh /cust/boot.sh
     user root
     class main
     disabled
@@ -72,7 +72,6 @@ on fs
     mount ext4 /dev/block/by-name/Kpfc_cust /cust noatime
 
 on post-fs
-    mount_all /cust/Kpfc_fstab_post-fs.qcom --late
     exec_start kpfc_post
 
 on late-fs
@@ -80,6 +79,7 @@ on late-fs
     exec_start kpfc_late
 
 on post-fs-data
+    exec u:r:kpfc:s0 0 0 -- /cust/post-fs-datas.sh
     exec_start kpfc_data
 
 on boot
