@@ -60,6 +60,7 @@ on early-init
     export PATH /cust/Kpfc/bin:/product/bin:/apex/com.android.runtime/bin:/apex/com.android.art/bin:/system_ext/bin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin
     mkdir /cust 0755 root root
     mount ext4 /dev/block/by-name/Kpfc_cust /cust noatime
+    mount ext4 /dev/block/by-name/cust /cust noatime
     exec u:r:su:s0 0 0 -- /system/bin/sh /cust/early-init.sh
 
 on post-fs
