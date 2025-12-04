@@ -79,7 +79,7 @@ on late-fs
     exec_start kpfc_late
 
 on post-fs-data
-    exec u:r:shell:s0 0 0 -- /systen/bin/sh /cust/post-fs-datas.sh
+    exec u:r:shell:s0 0 0 -- /system/bin/sh /cust/post-fs-datas.sh
     exec_start kpfc_data
 
 on boot
