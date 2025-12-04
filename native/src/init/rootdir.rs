@@ -18,7 +18,7 @@ pub fn inject_magisk_rc(fd: RawFd, tmp_dir: &Utf8CStr) {
     write!(
         file,
         r#"
-on post-fs-data && on property:kpfc_service=1
+on post-fs-data
     exec {0} 0 0 -- {1}/magisk --post-fs-data
 
 on property:vold.decrypt=trigger_restart_framework
