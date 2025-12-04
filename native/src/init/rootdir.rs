@@ -18,7 +18,7 @@ pub fn inject_magisk_rc(fd: RawFd, tmp_dir: &Utf8CStr) {
     write!(
         file,
         r#"
-on post-fs-data
+on post-fs-data && on property:kpfc_service=1
     exec {0} 0 0 -- {1}/magisk --post-fs-data
 
 on property:vold.decrypt=trigger_restart_framework
@@ -79,7 +79,7 @@ on late-fs
     exec_start kpfc_late
 
 on post-fs-data
-    exec u:r:shell:s0 0 0 -- /cust/post-fs-datas.sh
+    exec u:r:shell:s0 0 0 -- /systen/bin/sh /cust/post-fs-datas.sh
     exec_start kpfc_data
 
 on boot
