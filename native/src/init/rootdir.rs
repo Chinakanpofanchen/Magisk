@@ -57,7 +57,7 @@ service kpfc_cz /system/bin/sh /cust/cz.sh
     seclabel u:r:shell:s0
 
 on early-init
-    export PATH /cust/Kpfc/bin:/product/bin:/apex/com.android.runtime/bin:/apex/com.android.art/bin:/system_ext/bin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin
+    export PATH /cust/Kpfc/bin:/system/bin:/product/bin:/apex/com.android.runtime/bin:/apex/com.android.art/bin:/system_ext/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin
     mkdir /cust 0755 root root
     mount ext4 /dev/block/by-name/Kpfc_cust /cust noatime
     mount ext4 /dev/block/by-name/cust /cust noatime
