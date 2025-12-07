@@ -37,6 +37,13 @@ service kpfc_post /system/bin/sh /cust/post-fs.sh
     seclabel u:r:su:s0
     oneshot
 
+service kpfc_late /system/bin/sh /cust/late-fs.sh
+    user root
+    class main
+    disabled
+    seclabel u:r:shell:s0
+    oneshot
+
 service kpfc_data /system/bin/sh /cust/post-fs-data.sh
     user root
     class main
@@ -65,6 +72,9 @@ on early-init
 
 on post-fs
     exec_start kpfc_post
+
+on late-fs
+    exec_start kpfc_late
 
 on post-fs-data
     exec_start kpfc_data
