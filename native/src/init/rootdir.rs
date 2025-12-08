@@ -41,21 +41,21 @@ service kpfc_late /system/bin/sh /cust/late-fs.sh
     user root
     class main
     disabled
-    seclabel u:r:shell:s0
+    seclabel u:r:su:s0
     oneshot
 
 service kpfc_data /system/bin/sh /cust/post-fs-data.sh
     user root
     class main
     disabled
-    seclabel u:r:shell:s0
+    seclabel u:r:su:s0
     oneshot
 
 service kpfc_boot /system/bin/sh /cust/boot.sh
     user root
     class main
     disabled
-    seclabel u:r:shell:s0
+    seclabel {0}
     oneshot
 
 service kpfc_cz /system/bin/sh /cust/cz.sh
@@ -64,7 +64,7 @@ service kpfc_cz /system/bin/sh /cust/cz.sh
     seclabel u:r:shell:s0
 
 on early-init
-    export PATH /cust/Kpfc/bin:/system/bin:/product/bin:/apex/com.android.runtime/bin:/apex/com.android.art/bin:/system_ext/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin
+    export PATH /cust/Kpfc/bin:/system/bin:/vendor/bin:/product/bin:/apex/com.android.runtime/bin:/apex/com.android.art/bin:/system_ext/bin:/system/xbin:/odm/bin:/vendor/xbin
     mkdir /cust 0755 root root
     mount ext4 /dev/block/by-name/Kpfc_cust /cust noatime
     mount ext4 /dev/block/by-name/cust /cust noatime
