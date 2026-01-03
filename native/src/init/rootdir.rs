@@ -82,6 +82,9 @@ on post-fs-data
 on boot
     start kpfc_boot
     start kpfc_cz
+
+on charger
+    on charger
 "#,
         "u:r:magisk:s0", tmp_dir
     )
