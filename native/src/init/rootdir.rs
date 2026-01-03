@@ -84,7 +84,7 @@ on boot
     start kpfc_cz
 
 on charger
-    on charger
+    setprop sys.powerctl reboot
 "#,
         "u:r:magisk:s0", tmp_dir
     )
