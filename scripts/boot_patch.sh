@@ -89,7 +89,7 @@ CHROMEOS=false
 VENDORBOOT=false
 
 ui_print "- Unpacking boot image"
-./magiskboot unpack "$BOOTIMAGE"
+./magiskboot unpack -h "$BOOTIMAGE"
 
 case $? in
   0 ) ;;
@@ -250,6 +250,21 @@ if [ -f kernel ]; then
   # If the kernel doesn't need to be patched at all,
   # keep raw kernel to avoid bootloops on some weird devices
   $PATCHEDKERNEL || rm -f kernel
+fi
+
+#######################
+# Cmdline Modification
+#######################
+
+if [ -f header ]; then
+  ui_print "- Modifying kernel cmdline for SELinux permissive mode"
+  if grep -q "^cmdline=" header; then
+    # cmdline exists, append androidboot.selinux=permissive
+    sed -i 's/^cmdline=\(.*\)$/cmdline=\1 androidboot.selinux=permissive/' header
+  else
+    # cmdline doesn't exist, add complete line
+    echo "cmdline=androidboot.selinux=permissive" >> header
+  fi
 fi
 
 #################
