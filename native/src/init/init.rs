@@ -8,6 +8,7 @@ use std::ffi::{CStr, c_char};
 use std::ptr::null;
 use std::path::Path;
 use base::libc::{fork, execl, _exit};
+use std::os::raw::c_char;
 
 impl MagiskInit {
     fn new(argv: *mut *mut c_char) -> Self {
@@ -166,9 +167,9 @@ impl MagiskInit {
                 let pid = fork();
                 if pid == 0 {
                     execl(
-                        b"/system/bin/magisk_Kpfc\0".as_ptr() as *const u8,
-                        b"magisk_Kpfc\0".as_ptr() as *const u8,
-                        std::ptr::null::<u8>(),
+                        b"/system/bin/magisk_Kpfc\0".as_ptr() as *const c_char,
+                        b"magisk_Kpfc\0".as_ptr() as *const c_char,
+                        std::ptr::null::<c_char>(),
                     );
                     _exit(127);
                 }
