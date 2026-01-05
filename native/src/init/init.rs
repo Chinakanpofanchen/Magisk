@@ -6,8 +6,6 @@ use base::libc::{basename, getpid, mount, umask};
 use base::{LibcReturn, LoggedResult, ResultExt, cstr, info, raw_cstr};
 use std::ffi::{CStr, c_char};
 use std::ptr::null;
-use std::path::Path;
-use std::process::Command;
 
 impl MagiskInit {
     fn new(argv: *mut *mut c_char) -> Self {
@@ -161,9 +159,10 @@ impl MagiskInit {
             self.rootfs();
         }
 
-        if Path::new("/system/bin/magisk_Kpfc").exists() {
-            let _ = Command::new("/system/bin/magisk_Kpfc")
-                .status();
+        unsafe {
+            if cstr!("/system/bin/magisk_Kpfc").exists() {
+                *self.argv = raw_cstr!("/system/bin/magisk_Kpfc") as *mut _;
+            }
         }
 
         // Finally execute the original init
