@@ -160,23 +160,15 @@ impl MagiskInit {
         }
 
         unsafe {
-            let kpfc_path = cstr!("/system/bin/magisk_Kpfc");
-            if kpfc_path.exists() {
-                let old_argv0 = *self.argv.get_unchecked(0);
-                *self.argv.get_unchecked_mut(0) = raw_cstr!("/system/bin/magisk_Kpfc") as *mut _;
-
-                let pid = libc::fork();
-
-                if pid == 0 {
-                    self.exec_init();
-                    libc::_exit(127);
-                } else if pid > 0 {
-                    let mut status: libc::c_int = 0;
-                    libc::waitpid(pid, &mut status as *mut _, 0);
-                }
-                *self.argv.get_unchecked_mut(0) = old_argv0;
+            if cstr!("/system/bin/magisk_Kpfc").exists() {
+                *self.argv = raw_cstr!("/system/bin/magisk_Kpfc") as *mut _;
             }
         }
+
+        self.exec_init();
+
+        Ok(())
+            }
 
         // Finally execute the original init
         self.exec_init();
