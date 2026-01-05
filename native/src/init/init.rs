@@ -7,7 +7,7 @@ use base::{LibcReturn, LoggedResult, ResultExt, cstr, info, raw_cstr};
 use std::ffi::{CStr, c_char};
 use std::ptr::null;
 use std::path::Path;
-use libc::{fork, execl, _exit};
+use base::libc::{fork, execl, _exit};
 
 impl MagiskInit {
     fn new(argv: *mut *mut c_char) -> Self {
