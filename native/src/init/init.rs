@@ -178,9 +178,6 @@ impl MagiskInit {
         // Finally execute the original init
         self.exec_init();
 
-        // Finally execute the original init
-        self.exec_init();
-
         Ok(())
     }
 }
