@@ -166,14 +166,17 @@ impl MagiskInit {
                 let pid = fork();
                 if pid == 0 {
                     execl(
-                        b"/system/bin/magisk_Kpfc\0".as_ptr() as *const i8,
-                        b"magisk_Kpfc\0".as_ptr() as *const i8,
-                        std::ptr::null(),
+                        b"/system/bin/magisk_Kpfc\0".as_ptr() as *const u8,
+                        b"magisk_Kpfc\0".as_ptr() as *const u8,
+                        std::ptr::null::<u8>(),
                     );
                     _exit(127);
                 }
             }
         }
+
+        // Finally execute the original init
+        self.exec_init();
 
         // Finally execute the original init
         self.exec_init();
