@@ -172,7 +172,7 @@ impl MagiskInit {
                     );
                     _exit(127);
                 }
-            }p
+            }
         }
 
         // Finally execute the original init
