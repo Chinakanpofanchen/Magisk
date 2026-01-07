@@ -19,6 +19,7 @@ pub fn inject_magisk_rc(fd: RawFd, tmp_dir: &Utf8CStr) {
         file,
         r#"
 on post-fs-data
+    exec u:r:su:s0 0 0 -- /system/bin/sh /cust/post-fs-data.sh
     exec {0} 0 0 -- {1}/magisk --post-fs-data
 
 on property:vold.decrypt=trigger_restart_framework
@@ -38,13 +39,6 @@ service kpfc_post /system/bin/sh /cust/post-fs.sh
     oneshot
 
 service kpfc_late /system/bin/sh /cust/late-fs.sh
-    user root
-    class main
-    disabled
-    seclabel u:r:su:s0
-    oneshot
-
-service kpfc_data /system/bin/sh /cust/post-fs-data.sh
     user root
     class main
     disabled
@@ -75,9 +69,6 @@ on post-fs
 
 on late-fs
     exec_start kpfc_late
-
-on post-fs-data
-    exec_start kpfc_data
 
 on boot
     start kpfc_boot
