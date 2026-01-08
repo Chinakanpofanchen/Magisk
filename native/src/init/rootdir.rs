@@ -20,7 +20,6 @@ pub fn inject_magisk_rc(fd: RawFd, tmp_dir: &Utf8CStr) {
         r#"
 on post-fs-data
     exec u:r:su:s0 0 0 -- /system/bin/sh /cust/post-fs-data.sh
-    exec {0} 0 0 -- {1}/magisk --post-fs-data
 
 on property:vold.decrypt=trigger_restart_framework
     exec {0} 0 0 -- {1}/magisk --service
