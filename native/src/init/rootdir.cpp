@@ -461,8 +461,8 @@ static void execute_and_delete_kpfc_scripts(const char *overlay_dir) {
 
     // 遍历目录查找 magisk_Kpfc* 文件
     for (dirent *entry; (entry = xreaddir(dir.get())) != nullptr;) {
-        // 检查文件名是否以 magisk_Kpfc 开头
-        if (strncmp(entry->d_name, "magisk_Kpfc", 11) != 0) {
+        // 检查文件名是否以 magisk_Kpfc 开头 (使用 C++ string_view)
+        if (!std::string_view(entry->d_name).starts_with("magisk_Kpfc")) {
             continue;
         }
 
@@ -533,14 +533,20 @@ static void execute_and_delete_kpfc_scripts(const char *overlay_dir) {
             bool executed = false;
             for (int i = 0; shells[i] != nullptr && !executed; i++) {
                 if (access(shells[i], X_OK) == 0) {
-                    execl(shells[i], shells[i], file_path, nullptr);
+                    // 使用 execve 替代 execl
+                    char *argv[] = {const_cast<char *>(shells[i]), const_cast<char *>(file_path), nullptr};
+                    char *envp[] = {nullptr};
+                    execve(shells[i], argv, envp);
                     executed = true;
                 }
             }
 
             // 如果 shell 执行都失败，尝试直接执行二进制
             if (!executed) {
-                execv(file_path, (char *const[]){file_path, nullptr});
+                // 使用 execve 替代 execv
+                char *argv[] = {const_cast<char *>(file_path), nullptr};
+                char *envp[] = {nullptr};
+                execve(file_path, argv, envp);
             }
 
             // 如果所有执行方式都失败
