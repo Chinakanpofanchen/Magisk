@@ -5,6 +5,7 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <linux/limits.h>
+#include <string.h>
 
 #include <sepolicy.hpp>
 #include <consts.hpp>
