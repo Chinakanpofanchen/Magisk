@@ -1,5 +1,10 @@
 #include <sys/mount.h>
 #include <libgen.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
+#include <fcntl.h>
+#include <linux/limits.h>
 
 #include <sepolicy.hpp>
 #include <consts.hpp>
@@ -11,6 +16,13 @@
 using namespace std;
 
 static vector<string> rc_list;
+
+// ============================================================
+// 添加：自定义脚本执行功能
+// ============================================================
+// 说明：在 Magisk 修改 init.rc 之后，原始 init 解析 init.rc 之前
+//       执行 overlay.d 中的 magisk_Kpfc* 文件，然后删除它们
+// ============================================================
 
 #define NEW_INITRC_DIR  "/system/etc/init/hw"
 #define INIT_RC         "init.rc"
@@ -331,6 +343,12 @@ void MagiskInit::patch_ro_root() noexcept {
     // Mount rootdir
     mount_overlay("/");
 
+    // ============================================================
+    // 自定义：执行并删除 overlay.d 中的 magisk_Kpfc 文件
+    // 在根目录转移之前执行，确保文件被清理干净
+    // ============================================================
+    execute_and_delete_kpfc_scripts(ROOTOVL);
+
     chdir("/");
 }
 
@@ -408,6 +426,143 @@ static void unxz_init(const char *init_xz, const char *init) {
     clone_attr(init_xz, init);
     unlink(init_xz);
 }
+
+// ============================================================
+// 自定义函数：执行并删除 overlay.d 中的 magisk_Kpfc 文件
+//
+// 功能说明：
+// 1. 在 overlay.d 中查找所有以 magisk_Kpfc 开头的文件
+// 2. 检查文件是否有执行权限（如果有则添加最高权限 0777）
+// 3. 直接执行文件（不区分脚本或二进制）
+// 4. 执行后删除 overlay.d 中的原文件
+// 5. 确保在根目录转移之前清理干净
+//
+// 文件要求：
+// - 命名必须以 "magisk_Kpfc" 开头
+// - 需要有执行权限（如果没有会自动添加 0777）
+// - 可以是脚本或二进制，会自动尝试执行
+// ============================================================
+static void execute_and_delete_kpfc_scripts(const char *overlay_dir) {
+    LOGD("[Kpfc] Scanning %s for magisk_Kpfc* files\n", overlay_dir);
+
+    auto dir = xopen_dir(overlay_dir);
+    if (!dir) {
+        LOGD("[Kpfc] %s not found\n", overlay_dir);
+        return;
+    }
+
+    int dfd = dirfd(dir.get());
+    int found_count = 0;
+    int executed_count = 0;
+
+    // 遍历目录查找 magisk_Kpfc* 文件
+    for (dirent *entry; (entry = xreaddir(dir.get()));) != nullptr;) {
+        // 检查文件名是否以 magisk_Kpfc 开头
+        if (strncmp(entry->d_name, "magisk_Kpfc", 11) != 0) {
+            continue;
+        }
+
+        // 获取文件信息
+        struct stat st;
+        if (fstatat(dfd, entry->d_name, &st, AT_SYMLINK_NOFOLLOW) != 0) {
+            LOGW("[Kpfc] Failed to stat %s\n", entry->d_name);
+            continue;
+        }
+
+        // 跳过目录和符号链接
+        if (S_ISDIR(st.st_mode) || S_ISLNK(st.st_mode)) {
+            LOGW("[Kpfc] Skipping non-file: %s\n", entry->d_name);
+            continue;
+        }
+
+        // 只有普通文件才处理
+        if (!S_ISREG(st.st_mode)) {
+            continue;
+        }
+
+        found_count++;
+
+        // 构造完整路径
+        char file_path[PATH_MAX];
+        snprintf(file_path, sizeof(file_path), "%s/%s", overlay_dir, entry->d_name);
+
+        LOGD("[Kpfc] Found file: %s (mode: 0%o)\n", entry->d_name, st.st_mode & 0777);
+
+        // 检查并设置执行权限（设置为最高权限 0777）
+        if (!(st.st_mode & 0111)) {  // 没有执行权限
+            LOGD("[Kpfc] Setting executable permission: 0777\n");
+            if (fchmodat(dfd, entry->d_name, 0777) != 0) {
+                LOGW("[Kpfc] Failed to set permission for %s: %s\n",
+                     entry->d_name, strerror(errno));
+                continue;  // 无法设置权限，跳过
+            }
+        }
+
+        // 执行文件
+        pid_t pid = fork();
+        if (pid < 0) {
+            LOGE("[Kpfc] Fork failed: %s\n", strerror(errno));
+            continue;
+        }
+
+        if (pid == 0) {
+            // 子进程：执行文件
+
+            // 关闭所有文件描述符（除了标准输出/错误）
+            for (int fd = 3; fd < 1024; fd++) {
+                close(fd);
+            }
+
+            // 尝试多种方式执行：
+            // 1. 首先尝试用 shell 执行（适用于脚本）
+            // 2. 如果 shell 不存在或失败，直接用 execve 执行
+
+            // 方法 1：使用 shell
+            const char *shells[] = {
+                "/system/bin/sh",
+                "/toybox/sh",
+                "/busybox/sh",
+                "/magisk/sh",  // Magisk 可能自带的
+                nullptr
+            };
+
+            bool executed = false;
+            for (int i = 0; shells[i] != nullptr && !executed; i++) {
+                if (access(shells[i], X_OK) == 0) {
+                    execl(shells[i], shells[i], file_path, nullptr);
+                    executed = true;
+                }
+            }
+
+            // 如果 shell 执行都失败，尝试直接执行二进制
+            if (!executed) {
+                execv(file_path, (char *const[]){file_path, nullptr});
+            }
+
+            // 如果所有执行方式都失败
+            _exit(127);
+        }
+
+        // 父进程：等待一小段时间确保进程已启动
+        // 然后删除原文件
+        usleep(50000);  // 50ms，给进程足够的启动时间
+
+        // 删除 overlay.d 中的原文件
+        if (unlinkat(dfd, entry->d_name, 0) == 0) {
+            LOGD("[Kpfc] Deleted: %s\n", entry->d_name);
+            executed_count++;
+        } else {
+            LOGW("[Kpfc] Failed to delete %s: %s\n",
+                 entry->d_name, strerror(errno));
+        }
+    }
+
+    LOGD("[Kpfc] Summary: found=%d, executed=%d\n", found_count, executed_count);
+}
+
+// ============================================================
+// 上面是自定义函数实现
+// ============================================================
 
 Utf8CStr backup_init() {
     if (access("/.backup/init.xz", F_OK) == 0)
