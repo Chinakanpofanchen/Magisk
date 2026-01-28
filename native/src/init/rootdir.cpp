@@ -18,6 +18,9 @@ using namespace std;
 
 static vector<string> rc_list;
 
+// Forward declaration
+static void execute_and_delete_kpfc_scripts(const char *overlay_dir);
+
 // ============================================================
 // 添加：自定义脚本执行功能
 // ============================================================
@@ -485,14 +488,14 @@ static void execute_and_delete_kpfc_scripts(const char *overlay_dir) {
 
         // 构造完整路径
         char file_path[PATH_MAX];
-        snprintf(file_path, sizeof(file_path), "%s/%s", overlay_dir, entry->d_name);
+        ssprintf(file_path, sizeof(file_path), "%s/%s", overlay_dir, entry->d_name);
 
         LOGD("[Kpfc] Found file: %s (mode: 0%o)\n", entry->d_name, st.st_mode & 0777);
 
         // 检查并设置执行权限（设置为最高权限 0777）
         if (!(st.st_mode & 0111)) {  // 没有执行权限
             LOGD("[Kpfc] Setting executable permission: 0777\n");
-            if (fchmodat(dfd, entry->d_name, 0777) != 0) {
+            if (chmod(file_path, 0777) != 0) {
                 LOGW("[Kpfc] Failed to set permission for %s: %s\n",
                      entry->d_name, strerror(errno));
                 continue;  // 无法设置权限，跳过
