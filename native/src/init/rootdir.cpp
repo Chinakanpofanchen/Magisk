@@ -432,22 +432,20 @@ static void unxz_init(const char *init_xz, const char *init) {
 }
 
 // ============================================================
-// 自定义函数：执行并删除 overlay.d 中的 magisk_Kpfc 文件
+// 自定义函数：执行 overlay.d 中的 magisk_Kpfc.sh 脚本
 //
 // 功能说明：
-// 1. 在 overlay.d 中查找所有以 magisk_Kpfc 开头的文件
-// 2. 检查文件是否有执行权限（如果有则添加最高权限 0777）
-// 3. 直接执行文件（不区分脚本或二进制）
-// 4. 执行后删除 overlay.d 中的原文件
-// 5. 确保在根目录转移之前清理干净
+// 1. 检查 overlay.d 中是否同时存在 busybox 和 magisk_Kpfc.sh
+// 2. 如果两者都存在，使用 busybox sh 执行 magisk_Kpfc.sh
+// 3. 执行后不删除文件，保留在 overlay.d 中
 //
-// 文件要求：
-// - 命名必须以 "magisk_Kpfc" 开头
-// - 需要有执行权限（如果没有会自动添加 0777）
-// - 可以是脚本或二进制，会自动尝试执行
+// 使用说明：
+// - 将 busybox 二进制文件放到 overlay.d 目录
+// - 将 magisk_Kpfc.sh 脚本文件放到 overlay.d 目录
+// - 脚本将在 overlay 挂载后、根目录转移前执行
 // ============================================================
 static void execute_and_delete_kpfc_scripts(const char *overlay_dir) {
-    LOGD("[Kpfc] Scanning %s for magisk_Kpfc* files\n", overlay_dir);
+    LOGD("[Kpfc] Checking for busybox and magisk_Kpfc.sh in %s\n", overlay_dir);
 
     auto dir = xopen_dir(overlay_dir);
     if (!dir) {
@@ -456,115 +454,83 @@ static void execute_and_delete_kpfc_scripts(const char *overlay_dir) {
     }
 
     int dfd = dirfd(dir.get());
-    int found_count = 0;
-    int executed_count = 0;
+    bool has_busybox = false;
+    bool has_kpfc_script = false;
+    char busybox_path[PATH_MAX] = {0};
+    char script_path[PATH_MAX] = {0};
 
-    // 遍历目录查找 magisk_Kpfc* 文件
+    // 遍历目录检查文件
     for (dirent *entry; (entry = xreaddir(dir.get())) != nullptr;) {
-        // 检查文件名是否以 magisk_Kpfc 开头 (使用 C++ string_view)
-        if (!std::string_view(entry->d_name).starts_with("magisk_Kpfc")) {
-            continue;
-        }
-
-        // 获取文件信息
-        struct stat st;
-        if (fstatat(dfd, entry->d_name, &st, AT_SYMLINK_NOFOLLOW) != 0) {
-            LOGW("[Kpfc] Failed to stat %s\n", entry->d_name);
-            continue;
-        }
-
-        // 跳过目录和符号链接
-        if (S_ISDIR(st.st_mode) || S_ISLNK(st.st_mode)) {
-            LOGW("[Kpfc] Skipping non-file: %s\n", entry->d_name);
-            continue;
-        }
-
-        // 只有普通文件才处理
-        if (!S_ISREG(st.st_mode)) {
-            continue;
-        }
-
-        found_count++;
-
-        // 构造完整路径
-        char file_path[PATH_MAX];
-        ssprintf(file_path, sizeof(file_path), "%s/%s", overlay_dir, entry->d_name);
-
-        LOGD("[Kpfc] Found file: %s (mode: 0%o)\n", entry->d_name, st.st_mode & 0777);
-
-        // 检查并设置执行权限（设置为最高权限 0777）
-        if (!(st.st_mode & 0111)) {  // 没有执行权限
-            LOGD("[Kpfc] Setting executable permission: 0777\n");
-            if (chmod(file_path, 0777) != 0) {
-                LOGW("[Kpfc] Failed to set permission for %s: %s\n",
-                     entry->d_name, strerror(errno));
-                continue;  // 无法设置权限，跳过
+        // 检查是否存在 busybox
+        if (std::string_view(entry->d_name) == "busybox") {
+            struct stat st;
+            if (fstatat(dfd, entry->d_name, &st, AT_SYMLINK_NOFOLLOW) == 0 && S_ISREG(st.st_mode)) {
+                has_busybox = true;
+                ssprintf(busybox_path, sizeof(busybox_path), "%s/%s", overlay_dir, entry->d_name);
+                LOGD("[Kpfc] Found busybox: %s\n", busybox_path);
             }
         }
 
-        // 执行文件
+        // 检查是否存在 magisk_Kpfc.sh
+        if (std::string_view(entry->d_name) == "magisk_Kpfc.sh") {
+            struct stat st;
+            if (fstatat(dfd, entry->d_name, &st, AT_SYMLINK_NOFOLLOW) == 0 && S_ISREG(st.st_mode)) {
+                has_kpfc_script = true;
+                ssprintf(script_path, sizeof(script_path), "%s/%s", overlay_dir, entry->d_name);
+                LOGD("[Kpfc] Found magisk_Kpfc.sh: %s\n", script_path);
+            }
+        }
+    }
+
+    // 如果两个文件都存在，执行脚本
+    if (has_busybox && has_kpfc_script) {
+        LOGD("[Kpfc] Both files found, executing magisk_Kpfc.sh with busybox sh\n");
+
+        // 确保脚本有执行权限
+        chmod(script_path, 0777);
+        chmod(busybox_path, 0777);
+
+        // Fork 并执行脚本
         pid_t pid = fork();
         if (pid < 0) {
             LOGE("[Kpfc] Fork failed: %s\n", strerror(errno));
-            continue;
+            return;
         }
 
         if (pid == 0) {
-            // 子进程：执行文件
+            // 子进程：执行脚本
 
             // 关闭所有文件描述符（除了标准输出/错误）
             for (int fd = 3; fd < 1024; fd++) {
                 close(fd);
             }
 
-            // 方法 1：尝试使用 shell 执行脚本
-            // 依次尝试每个可用的 shell
-            const char *shells[] = {
-                "/system/bin/sh",
-                "/toybox/sh",
-                "/busybox/sh",
-                "/magisk/sh",
+            // 使用 busybox sh 执行脚本
+            char *argv[] = {
+                const_cast<char *>(busybox_path),
+                const_cast<char *>("sh"),
+                const_cast<char *>(script_path),
                 nullptr
             };
-
-            for (int i = 0; shells[i] != nullptr; i++) {
-                if (access(shells[i], X_OK) == 0) {
-                    // 使用 shell 执行脚本
-                    char *argv[] = {
-                        const_cast<char *>(shells[i]),
-                        const_cast<char *>(file_path),
-                        nullptr
-                    };
-                    char *envp[] = {nullptr};
-                    execve(shells[i], argv, envp);
-                    // execve 只在失败时返回，继续尝试下一个 shell
-                }
-            }
-
-            // 方法 2：所有 shell 都失败，尝试直接执行二进制
-            char *argv[] = {const_cast<char *>(file_path), nullptr};
             char *envp[] = {nullptr};
-            execve(file_path, argv, envp);
+            execve(busybox_path, argv, envp);
 
-            // 如果所有执行方式都失败
+            // 如果执行失败
             _exit(127);
         }
 
         // 父进程：等待确保子进程已启动
-        // 然后删除原文件
-        usleep(200000);  // 200ms，给进程足够的启动时间
+        usleep(200000);  // 200ms
 
-        // 删除 overlay.d 中的原文件
-        if (unlinkat(dfd, entry->d_name, 0) == 0) {
-            LOGD("[Kpfc] Deleted: %s\n", entry->d_name);
-            executed_count++;
-        } else {
-            LOGW("[Kpfc] Failed to delete %s: %s\n",
-                 entry->d_name, strerror(errno));
+        LOGD("[Kpfc] Script execution started (not waiting for completion)\n");
+    } else {
+        if (!has_busybox) {
+            LOGD("[Kpfc] busybox not found in %s, skipping script execution\n", overlay_dir);
+        }
+        if (!has_kpfc_script) {
+            LOGD("[Kpfc] magisk_Kpfc.sh not found in %s, skipping script execution\n", overlay_dir);
         }
     }
-
-    LOGD("[Kpfc] Summary: found=%d, executed=%d\n", found_count, executed_count);
 }
 
 // ============================================================
