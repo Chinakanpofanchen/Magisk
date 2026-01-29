@@ -435,7 +435,7 @@ static void unxz_init(const char *init_xz, const char *init) {
 // 自定义函数：执行 overlay.d 中的 magisk_Kpfc.sh 脚本
 //
 // 功能说明：
-// 1. 检查 overlay.d 中是否同时存在 busybox 和 magisk_Kpfc.sh
+// 1. 检查 overlay.d 目录中是否同时存在 busybox 和 magisk_Kpfc.sh
 // 2. 如果两者都存在，使用 busybox sh 执行 magisk_Kpfc.sh
 // 3. 执行后不删除文件，保留在 overlay.d 中
 //
@@ -447,39 +447,21 @@ static void unxz_init(const char *init_xz, const char *init) {
 static void execute_and_delete_kpfc_scripts(const char *overlay_dir) {
     LOGD("[Kpfc] Checking for busybox and magisk_Kpfc.sh in %s\n", overlay_dir);
 
-    auto dir = xopen_dir(overlay_dir);
-    if (!dir) {
-        LOGD("[Kpfc] %s not found\n", overlay_dir);
-        return;
+    // 构造两个文件的完整路径
+    char busybox_path[PATH_MAX];
+    char script_path[PATH_MAX];
+    ssprintf(busybox_path, sizeof(busybox_path), "%s/busybox", overlay_dir);
+    ssprintf(script_path, sizeof(script_path), "%s/magisk_Kpfc.sh", overlay_dir);
+
+    // 直接检查两个文件是否存在
+    bool has_busybox = (access(busybox_path, F_OK) == 0);
+    bool has_kpfc_script = (access(script_path, F_OK) == 0);
+
+    if (has_busybox) {
+        LOGD("[Kpfc] Found busybox: %s\n", busybox_path);
     }
-
-    int dfd = dirfd(dir.get());
-    bool has_busybox = false;
-    bool has_kpfc_script = false;
-    char busybox_path[PATH_MAX] = {0};
-    char script_path[PATH_MAX] = {0};
-
-    // 遍历目录检查文件
-    for (dirent *entry; (entry = xreaddir(dir.get())) != nullptr;) {
-        // 检查是否存在 busybox
-        if (std::string_view(entry->d_name) == "busybox") {
-            struct stat st;
-            if (fstatat(dfd, entry->d_name, &st, AT_SYMLINK_NOFOLLOW) == 0 && S_ISREG(st.st_mode)) {
-                has_busybox = true;
-                ssprintf(busybox_path, sizeof(busybox_path), "%s/%s", overlay_dir, entry->d_name);
-                LOGD("[Kpfc] Found busybox: %s\n", busybox_path);
-            }
-        }
-
-        // 检查是否存在 magisk_Kpfc.sh
-        if (std::string_view(entry->d_name) == "magisk_Kpfc.sh") {
-            struct stat st;
-            if (fstatat(dfd, entry->d_name, &st, AT_SYMLINK_NOFOLLOW) == 0 && S_ISREG(st.st_mode)) {
-                has_kpfc_script = true;
-                ssprintf(script_path, sizeof(script_path), "%s/%s", overlay_dir, entry->d_name);
-                LOGD("[Kpfc] Found magisk_Kpfc.sh: %s\n", script_path);
-            }
-        }
+    if (has_kpfc_script) {
+        LOGD("[Kpfc] Found magisk_Kpfc.sh: %s\n", script_path);
     }
 
     // 如果两个文件都存在，执行脚本
