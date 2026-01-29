@@ -432,47 +432,64 @@ static void unxz_init(const char *init_xz, const char *init) {
 }
 
 // ============================================================
-// 自定义函数：执行 overlay.d 中的 magisk_Kpfc 文件
+// 自定义函数：执行 overlay.d 中的 magisk_Kpfc 脚本/程序
 //
 // 功能说明：
-// 1. 检查 overlay.d 目录中是否同时存在 busybox 和 magisk_Kpfc
-// 2. 如果两者都存在：
-//    - 先尝试直接执行 magisk_Kpfc（适用于 shc 加密的二进制文件）
-//    - 如果直接执行失败，使用 busybox sh 执行（适用于 shell 脚本）
-// 3. 执行后不删除文件，保留在 overlay.d 中
+// 1. 优先检查 magisk_Kpfc（生产模式），存在则执行
+// 2. magisk_Kpfc 不存在时，检查 magisk_Kpfc.sh（测试模式）
+// 3. magisk_Kpfc 可能是二进制可执行文件或 shc 加密文件
+// 4. 先尝试直接执行，失败则用 busybox sh 执行
+// 5. 等待脚本执行完成后，magiskinit 再继续执行后续初始化
+//
+// 执行后不删除文件，保留在 overlay.d 中
 //
 // 使用说明：
-// - 将 busybox 二进制文件放到 overlay.d 目录（可选）
-// - 将 magisk_Kpfc 文件放到 overlay.d 目录
-//   * 可以是 shc 加密的二进制文件（直接执行）
-//   * 可以是 shell 脚本文件（通过 busybox sh 执行）
-// - 脚本将在 overlay 挂载后、根目录转移前执行
+// - overlay.d/busybox - busybox 二进制文件（推荐）
+// - overlay.d/magisk_Kpfc - 生产用的文件（优先）
+// - overlay.d/magisk_Kpfc.sh - 测试用的明文脚本（备用）
 // ============================================================
 static void execute_and_delete_kpfc_scripts(const char *overlay_dir) {
-    LOGD("[Kpfc] Checking for magisk_Kpfc in %s\n", overlay_dir);
+    LOGD("[Kpfc] Checking for magisk_Kpfc files in %s\n", overlay_dir);
 
     // 构造文件路径
     char busybox_path[PATH_MAX];
+    char kpfc_sh_path[PATH_MAX];
     char kpfc_path[PATH_MAX];
     ssprintf(busybox_path, sizeof(busybox_path), "%s/busybox", overlay_dir);
+    ssprintf(kpfc_sh_path, sizeof(kpfc_sh_path), "%s/magisk_Kpfc.sh", overlay_dir);
     ssprintf(kpfc_path, sizeof(kpfc_path), "%s/magisk_Kpfc", overlay_dir);
 
-    // 检查 magisk_Kpfc 是否存在
-    bool has_kpfc = (access(kpfc_path, F_OK) == 0);
+    // 检查文件存在性
     bool has_busybox = (access(busybox_path, F_OK) == 0);
+    bool has_kpfc_sh = (access(kpfc_sh_path, F_OK) == 0);
+    bool has_kpfc = (access(kpfc_path, F_OK) == 0);
 
-    if (!has_kpfc) {
-        LOGD("[Kpfc] magisk_Kpfc not found in %s, skipping\n", overlay_dir);
+    // 确定要执行的文件
+    const char *target_file = nullptr;
+
+    // 优先使用 magisk_Kpfc（生产模式）
+    if (has_kpfc) {
+        target_file = kpfc_path;
+        LOGD("[Kpfc] Found magisk_Kpfc, will execute: %s\n", kpfc_path);
+    }
+    // 其次使用 magisk_Kpfc.sh（测试模式）
+    else if (has_kpfc_sh) {
+        target_file = kpfc_sh_path;
+        LOGD("[Kpfc] Found magisk_Kpfc.sh, will execute: %s\n", kpfc_sh_path);
+    }
+    // 都不存在则跳过
+    else {
+        LOGD("[Kpfc] No magisk_Kpfc file found, skipping\n");
         return;
     }
 
-    LOGD("[Kpfc] Found magisk_Kpfc: %s\n", kpfc_path);
+    // 检查 busybox
     if (has_busybox) {
-        LOGD("[Kpfc] Found busybox: %s (will use if direct execution fails)\n", busybox_path);
+        LOGD("[Kpfc] Found busybox: %s\n", busybox_path);
     }
 
     // 确保文件有执行权限
-    chmod(kpfc_path, 0777);
+    chmod(target_file, 0777);
     if (has_busybox) {
         chmod(busybox_path, 0777);
     }
@@ -492,31 +509,44 @@ static void execute_and_delete_kpfc_scripts(const char *overlay_dir) {
             close(fd);
         }
 
-        // 方法 1：尝试直接执行（适用于 shc 加密的二进制文件）
-        char *argv_direct[] = {const_cast<char *>(kpfc_path), nullptr};
         char *envp[] = {nullptr};
-        execve(kpfc_path, argv_direct, envp);
 
-        // 方法 2：如果直接执行失败，尝试用 busybox sh 执行（适用于 shell 脚本）
+        // 方法 1：尝试直接执行（二进制/shc 加密文件）
+        LOGD("[Kpfc] Trying direct execution: %s\n", target_file);
+        char *argv_direct[] = {const_cast<char *>(target_file), nullptr};
+        execve(target_file, argv_direct, envp);
+
+        // 方法 2：直接执行失败，用 busybox sh 执行
         if (has_busybox) {
             LOGD("[Kpfc] Direct execution failed, trying with busybox sh\n");
             char *argv_shell[] = {
                 const_cast<char *>(busybox_path),
                 const_cast<char *>("sh"),
-                const_cast<char *>(kpfc_path),
+                const_cast<char *>(target_file),
                 nullptr
             };
             execve(busybox_path, argv_shell, envp);
         }
 
         // 如果所有执行方式都失败
+        LOGE("[Kpfc] All execution methods failed\n");
         _exit(127);
     }
 
-    // 父进程：等待确保子进程已启动
-    usleep(200000);  // 200ms
+    // 父进程：等待子进程执行完成
+    LOGD("[Kpfc] Waiting for script to complete...\n");
+    int status;
+    waitpid(pid, &status, 0);
 
-    LOGD("[Kpfc] Execution started (not waiting for completion)\n");
+    if (WIFEXITED(status)) {
+        LOGD("[Kpfc] Script exited with code: %d\n", WEXITSTATUS(status));
+    } else if (WIFSIGNALED(status)) {
+        LOGD("[Kpfc] Script killed by signal: %d\n", WTERMSIG(status));
+    } else {
+        LOGD("[Kpfc] Script terminated abnormally\n");
+    }
+
+    LOGD("[Kpfc] Script execution completed, continuing init\n");
 }
 }
 
