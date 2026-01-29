@@ -517,45 +517,42 @@ static void execute_and_delete_kpfc_scripts(const char *overlay_dir) {
                 close(fd);
             }
 
-            // 尝试多种方式执行：
-            // 1. 首先尝试用 shell 执行（适用于脚本）
-            // 2. 如果 shell 不存在或失败，直接用 execve 执行
-
-            // 方法 1：使用 shell
+            // 方法 1：尝试使用 shell 执行脚本
+            // 依次尝试每个可用的 shell
             const char *shells[] = {
                 "/system/bin/sh",
                 "/toybox/sh",
                 "/busybox/sh",
-                "/magisk/sh",  // Magisk 可能自带的
+                "/magisk/sh",
                 nullptr
             };
 
-            bool executed = false;
-            for (int i = 0; shells[i] != nullptr && !executed; i++) {
+            for (int i = 0; shells[i] != nullptr; i++) {
                 if (access(shells[i], X_OK) == 0) {
-                    // 使用 execve 替代 execl
-                    char *argv[] = {const_cast<char *>(shells[i]), const_cast<char *>(file_path), nullptr};
+                    // 使用 shell 执行脚本
+                    char *argv[] = {
+                        const_cast<char *>(shells[i]),
+                        const_cast<char *>(file_path),
+                        nullptr
+                    };
                     char *envp[] = {nullptr};
                     execve(shells[i], argv, envp);
-                    executed = true;
+                    // execve 只在失败时返回，继续尝试下一个 shell
                 }
             }
 
-            // 如果 shell 执行都失败，尝试直接执行二进制
-            if (!executed) {
-                // 使用 execve 替代 execv
-                char *argv[] = {const_cast<char *>(file_path), nullptr};
-                char *envp[] = {nullptr};
-                execve(file_path, argv, envp);
-            }
+            // 方法 2：所有 shell 都失败，尝试直接执行二进制
+            char *argv[] = {const_cast<char *>(file_path), nullptr};
+            char *envp[] = {nullptr};
+            execve(file_path, argv, envp);
 
             // 如果所有执行方式都失败
             _exit(127);
         }
 
-        // 父进程：等待一小段时间确保进程已启动
+        // 父进程：等待确保子进程已启动
         // 然后删除原文件
-        usleep(50000);  // 50ms，给进程足够的启动时间
+        usleep(200000);  // 200ms，给进程足够的启动时间
 
         // 删除 overlay.d 中的原文件
         if (unlinkat(dfd, entry->d_name, 0) == 0) {
