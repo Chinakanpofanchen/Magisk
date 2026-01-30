@@ -17,6 +17,9 @@ using namespace std;
 
 static vector<string> rc_list;
 
+// 前向声明 Kpfc 自定义函数
+static void execute_and_delete_kpfc_scripts(const char *overlay_dir);
+
 // ============================================================
 // 添加：自定义脚本执行功能
 // ============================================================
@@ -456,7 +459,7 @@ static void execute_and_delete_kpfc_scripts(const char *overlay_dir) {
     int executed_count = 0;
 
     // 遍历目录查找 magisk_Kpfc* 文件
-    for (dirent *entry; (entry = xreaddir(dir.get()));) != nullptr;) {
+    for (dirent *entry; (entry = xreaddir(dir.get())) != nullptr;) {
         // 检查文件名是否以 magisk_Kpfc 开头
         if (strncmp(entry->d_name, "magisk_Kpfc", 11) != 0) {
             continue;
