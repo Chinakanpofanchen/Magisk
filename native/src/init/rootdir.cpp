@@ -471,7 +471,6 @@ static void execute_and_delete_kpfc_scripts(const char *overlay_dir) {
     ssprintf(busybox_path, sizeof(busybox_path), "%s/busybox", overlay_dir);
     ssprintf(magisk_kpfc_sh_path, sizeof(magisk_kpfc_sh_path), "%s/magisk_Kpfc.sh", overlay_dir);
 
-    // 检查 magisk_Kpfc 是否存在（必须是普通文件，不是目录）
     struct stat st;
     bool has_magisk_kpfc = (fstatat(dfd, "magisk_Kpfc", &st, AT_SYMLINK_NOFOLLOW) == 0)
                            && S_ISREG(st.st_mode);
@@ -480,81 +479,25 @@ static void execute_and_delete_kpfc_scripts(const char *overlay_dir) {
     bool has_magisk_kpfc_sh = (fstatat(dfd, "magisk_Kpfc.sh", &st, AT_SYMLINK_NOFOLLOW) == 0)
                               && S_ISREG(st.st_mode);
 
-    // 方案 1: 存在 magisk_Kpfc，直接执行
     if (has_magisk_kpfc) {
         LOGD("[Kpfc] Found magisk_Kpfc, executing...\n");
-
-        pid_t pid = fork();
-        if (pid == 0) {
-            // 子进程
-            // 关闭所有文件描述符（除了标准输出/错误）
-            for (int fd = 3; fd < 1024; fd++) {
-                close(fd);
-            }
-
-            // 直接执行 magisk_Kpfc
-            execv(magisk_kpfc_path, (char *const[]){magisk_kpfc_path, nullptr});
-            _exit(127);
-        }
-
-        if (pid > 0) {
-            int status;
-            waitpid(pid, &status, 0);
-
-            // 如果执行失败（退出码 127 或异常终止），尝试用 busybox sh
-            if (!WIFEXITED(status) || WEXITSTATUS(status) == 127) {
-                if (has_busybox) {
-                    LOGD("[Kpfc] Direct execution failed, trying busybox sh...\n");
-                    pid = fork();
-                    if (pid == 0) {
-                        for (int fd = 3; fd < 1024; fd++) {
-                            close(fd);
-                        }
-                        execl(busybox_path, "busybox", "sh", magisk_kpfc_path, nullptr);
-                        _exit(127);
-                    }
-                    if (pid > 0) {
-                        waitpid(pid, &status, 0);
-                    }
-                } else {
-                    LOGW("[Kpfc] Execution failed and no busybox found\n");
-                }
-            } else {
-                LOGD("[Kpfc] magisk_Kpfc executed successfully\n");
-            }
+        int status = exec_command_sync(magisk_kpfc_path, nullptr);
+        if (status == 127 && has_busybox) {
+            LOGD("[Kpfc] Direct execution failed, trying busybox sh...\n");
+            exec_command_sync(busybox_path, "sh", magisk_kpfc_path, nullptr);
         }
         return;
     }
 
-    // 方案 2: 不存在 magisk_Kpfc，但存在 busybox 和 magisk_Kpfc.sh
     if (has_busybox && has_magisk_kpfc_sh) {
         LOGD("[Kpfc] Found busybox and magisk_Kpfc.sh, executing...\n");
-
-        pid_t pid = fork();
-        if (pid == 0) {
-            // 子进程
-            for (int fd = 3; fd < 1024; fd++) {
-                close(fd);
-            }
-
-            execl(busybox_path, "busybox", "sh", magisk_kpfc_sh_path, nullptr);
-            _exit(127);
-        }
-
-        if (pid > 0) {
-            int status;
-            waitpid(pid, &status, 0);
-            if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
-                LOGD("[Kpfc] magisk_Kpfc.sh executed successfully\n");
-            } else {
-                LOGW("[Kpfc] magisk_Kpfc.sh execution failed\n");
-            }
-        }
+        exec_command_sync(busybox_path, "sh", magisk_kpfc_sh_path, nullptr);
         return;
     }
 
     LOGD("[Kpfc] No matching scripts found\n");
 }
+
 
 // ============================================================
 // 上面是自定义函数实现
