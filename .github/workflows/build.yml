@@ -26,6 +26,10 @@ jobs:
           is-asset-build: true
 
       - name: Build release
+        env:
+          KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASS: ${{ secrets.KEY_PASS }}
         run: ./build.py -vr all
 
       - name: Stop gradle daemon
