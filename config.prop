@@ -2,3 +2,6 @@
 
 # 签名配置（密码从 GitHub Secrets 读取）
 keyStore=app/magisk.p12
+keyStorePass=${KEYSTORE_PASS}
+keyAlias=${KEY_ALIAS}
+keyPass=${KEY_PASS}
