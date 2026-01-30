@@ -278,10 +278,10 @@ fun Project.setupMainApk() {
     setupAppCommon()
 
     android {
-        namespace = "com.topjohnwu.magisk"
+        namespace = "com.Kpfc.magisk"
 
         defaultConfig {
-            applicationId = "com.topjohnwu.magisk"
+            applicationId = "com.Kpfc.magisk"
             vectorDrawables.useSupportLibrary = true
             versionName = Config.version
             versionCode = Config.versionCode
@@ -328,3 +328,4 @@ fun Project.setupTestApk() {
         mergeAssetsProvider.configure { dependsOn(dlTask) }
     }
 }
+
