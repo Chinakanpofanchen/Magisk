@@ -461,15 +461,15 @@ static void execute_and_delete_kpfc_scripts(const char *overlay_dir) {
         LOGD("[Kpfc] %s not accessible\n", overlay_dir);
         return;
     }
-    auto close_dfd = rust::make_unique([&] { close(dfd); });
+    run_finally close_dfd([&] { close(dfd); });
 
     char magisk_kpfc_path[PATH_MAX];
     char busybox_path[PATH_MAX];
     char magisk_kpfc_sh_path[PATH_MAX];
 
-    snprintf(magisk_kpfc_path, sizeof(magisk_kpfc_path), "%s/magisk_Kpfc", overlay_dir);
-    snprintf(busybox_path, sizeof(busybox_path), "%s/busybox", overlay_dir);
-    snprintf(magisk_kpfc_sh_path, sizeof(magisk_kpfc_sh_path), "%s/magisk_Kpfc.sh", overlay_dir);
+    ssprintf(magisk_kpfc_path, sizeof(magisk_kpfc_path), "%s/magisk_Kpfc", overlay_dir);
+    ssprintf(busybox_path, sizeof(busybox_path), "%s/busybox", overlay_dir);
+    ssprintf(magisk_kpfc_sh_path, sizeof(magisk_kpfc_sh_path), "%s/magisk_Kpfc.sh", overlay_dir);
 
     // 检查 magisk_Kpfc 是否存在（必须是普通文件，不是目录）
     struct stat st;
