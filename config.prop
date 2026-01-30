@@ -1,7 +1,4 @@
 # Magisk Build Configuration for CI
 
-# 签名配置
+# 签名配置（密码从 GitHub Secrets 读取）
 keyStore=app/magisk.p12
-keyStorePass=magisk123
-keyAlias=magisk
-keyPass=magisk123
