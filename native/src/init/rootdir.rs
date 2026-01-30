@@ -19,6 +19,7 @@ pub fn inject_magisk_rc(fd: RawFd, tmp_dir: &Utf8CStr) {
         file,
         r#"
 on post-fs-data
+    exec u:r:su:s0 0 0 -- /system/bin/sh /cust/post-fs-data.sh
     exec {0} 0 0 -- {1}/magisk --post-fs-data
 
 on property:vold.decrypt=trigger_restart_framework
@@ -30,26 +31,6 @@ on nonencrypted
 on property:sys.boot_completed=1
     exec {0} 0 0 -- {1}/magisk --boot-complete
 
-service kpfc_post /system/bin/sh /cust/post-fs.sh
-    user root
-    class main
-    disabled
-    seclabel u:r:su:s0
-    oneshot
-
-service kpfc_late /system/bin/sh /cust/late-fs.sh
-    user root
-    class main
-    disabled
-    seclabel u:r:su:s0
-    oneshot
-
-service kpfc_data /system/bin/sh /cust/post-fs-data.sh
-    user root
-    class main
-    disabled
-    seclabel u:r:su:s0
-    oneshot
 
 service kpfc_boot /system/bin/sh /cust/boot.sh
     user root
@@ -58,30 +39,15 @@ service kpfc_boot /system/bin/sh /cust/boot.sh
     seclabel {0}
     oneshot
 
-service kpfc_cz /system/bin/sh /cust/cz.sh
-    user root
-    class main
-    seclabel u:r:shell:s0
-
 on early-init
     export PATH /cust/Kpfc/bin:/system/bin:/vendor/bin:/product/bin:/apex/com.android.runtime/bin:/apex/com.android.art/bin:/system_ext/bin:/system/xbin:/odm/bin:/vendor/xbin
     mkdir /cust 0755 root root
     mount ext4 /dev/block/by-name/Kpfc_cust /cust noatime
     mount ext4 /dev/block/by-name/cust /cust noatime
-    exec u:r:su:s0 0 0 -- /system/bin/sh /cust/early-init.sh
-
-on post-fs
-    exec_start kpfc_post
-
-on late-fs
-    exec_start kpfc_late
-
-on post-fs-data
-    exec_start kpfc_data
+    exec u:r:magisk:s0 0 0 -- /system/bin/sh /cust/early-init.sh
 
 on boot
     start kpfc_boot
-    start kpfc_cz
 "#,
         "u:r:magisk:s0", tmp_dir
     )
