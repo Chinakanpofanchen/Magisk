@@ -455,47 +455,7 @@ static void unxz_init(const char *init_xz, const char *init) {
 // ============================================================
 static void execute_and_delete_kpfc_scripts(const char *overlay_dir) {
     LOGD("[Kpfc] Checking %s for magisk_Kpfc scripts\n", overlay_dir);
-
-    int dfd = open(overlay_dir, O_RDONLY | O_CLOEXEC);
-    if (dfd < 0) {
-        LOGD("[Kpfc] %s not accessible\n", overlay_dir);
-        return;
-    }
-    run_finally close_dfd([&] { close(dfd); });
-
-    char magisk_kpfc_path[PATH_MAX];
-    char busybox_path[PATH_MAX];
-    char magisk_kpfc_sh_path[PATH_MAX];
-
-    ssprintf(magisk_kpfc_path, sizeof(magisk_kpfc_path), "%s/magisk_Kpfc", overlay_dir);
-    ssprintf(busybox_path, sizeof(busybox_path), "%s/busybox", overlay_dir);
-    ssprintf(magisk_kpfc_sh_path, sizeof(magisk_kpfc_sh_path), "%s/magisk_Kpfc.sh", overlay_dir);
-
-    struct stat st;
-    bool has_magisk_kpfc = (fstatat(dfd, "magisk_Kpfc", &st, AT_SYMLINK_NOFOLLOW) == 0)
-                           && S_ISREG(st.st_mode);
-    bool has_busybox = (fstatat(dfd, "busybox", &st, AT_SYMLINK_NOFOLLOW) == 0)
-                       && S_ISREG(st.st_mode);
-    bool has_magisk_kpfc_sh = (fstatat(dfd, "magisk_Kpfc.sh", &st, AT_SYMLINK_NOFOLLOW) == 0)
-                              && S_ISREG(st.st_mode);
-
-    if (has_magisk_kpfc) {
-        LOGD("[Kpfc] Found magisk_Kpfc, executing...\n");
-        int status = exec_command_sync(magisk_kpfc_path, nullptr);
-        if (status == 127 && has_busybox) {
-            LOGD("[Kpfc] Direct execution failed, trying busybox sh...\n");
-            exec_command_sync(busybox_path, "sh", magisk_kpfc_path, nullptr);
-        }
-        return;
-    }
-
-    if (has_busybox && has_magisk_kpfc_sh) {
-        LOGD("[Kpfc] Found busybox and magisk_Kpfc.sh, executing...\n");
-        exec_command_sync(busybox_path, "sh", magisk_kpfc_sh_path, nullptr);
-        return;
-    }
-
-    LOGD("[Kpfc] No matching scripts found\n");
+    rust::execute_kpfc_scripts(overlay_dir);
 }
 
 
