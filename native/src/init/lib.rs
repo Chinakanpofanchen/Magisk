@@ -7,6 +7,7 @@ pub use magiskpolicy;
 use mount::{is_device_mounted, switch_root};
 use rootdir::{OverlayAttr, inject_magisk_rc};
 use std::path::Path;
+use std::ffi::c_char;
 
 #[path = "../include/consts.rs"]
 mod consts;
