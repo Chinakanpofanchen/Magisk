@@ -6,6 +6,7 @@ use logging::setup_klog;
 pub use magiskpolicy;
 use mount::{is_device_mounted, switch_root};
 use rootdir::{OverlayAttr, inject_magisk_rc};
+use std::path::Path;
 
 #[path = "../include/consts.rs"]
 mod consts;
