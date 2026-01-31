@@ -146,76 +146,57 @@ unsafe fn execute_kpfc_scripts(overlay_dir: *const c_char) {
 
 /// Execute a script using raw syscalls (works in nolibc)
 unsafe fn execute_script(path: &Path) -> i32 {
-    use libc::{c_char, c_int, syscall, SIGCHLD};
+    use libc::{c_char, c_int, c_long, syscall, SIGCHLD};
     use std::ffi::CString;
 
     // Syscall numbers for ARM64 (aarch64)
     #[cfg(target_arch = "aarch64")]
-    const SYS_CLONE: i64 = 220;
+    const SYS_CLONE: c_long = 220;
     #[cfg(target_arch = "aarch64")]
-    const SYS_EXECVE: i64 = 221;
+    const SYS_EXECVE: c_long = 221;
     #[cfg(target_arch = "aarch64")]
-    const SYS_WAIT4: i64 = 260;
+    const SYS_WAIT4: c_long = 260;
     #[cfg(target_arch = "aarch64")]
-    const SYS_EXIT: i64 = 93;
+    const SYS_EXIT: c_long = 93;
 
     // Syscall numbers for ARM32 (arm)
     #[cfg(target_arch = "arm")]
-    const SYS_CLONE: i64 = 120;
+    const SYS_CLONE: c_long = 120;
     #[cfg(target_arch = "arm")]
-    const SYS_EXECVE: i64 = 11;
+    const SYS_EXECVE: c_long = 11;
     #[cfg(target_arch = "arm")]
-    const SYS_WAIT4: i64 = 114;
+    const SYS_WAIT4: c_long = 114;
     #[cfg(target_arch = "arm")]
-    const SYS_EXIT: i64 = 1;
+    const SYS_EXIT: c_long = 1;
 
     // Syscall numbers for x86_64
     #[cfg(target_arch = "x86_64")]
-    const SYS_CLONE: i64 = 56;
+    const SYS_CLONE: c_long = 56;
     #[cfg(target_arch = "x86_64")]
-    const SYS_EXECVE: i64 = 59;
+    const SYS_EXECVE: c_long = 59;
     #[cfg(target_arch = "x86_64")]
-    const SYS_WAIT4: i64 = 61;
+    const SYS_WAIT4: c_long = 61;
     #[cfg(target_arch = "x86_64")]
-    const SYS_EXIT: i64 = 60;
+    const SYS_EXIT: c_long = 60;
 
     // Syscall numbers for x86 (i686)
     #[cfg(target_arch = "x86")]
-    const SYS_CLONE: i64 = 120;
+    const SYS_CLONE: c_long = 120;
     #[cfg(target_arch = "x86")]
-    const SYS_EXECVE: i64 = 11;
+    const SYS_EXECVE: c_long = 11;
     #[cfg(target_arch = "x86")]
-    const SYS_WAIT4: i64 = 114;
+    const SYS_WAIT4: c_long = 114;
     #[cfg(target_arch = "x86")]
-    const SYS_EXIT: i64 = 1;
-
-    // Clone flags for fork-like behavior
-    const CLONE_VM: u64 = 0x00000100;
-    const CLONE_FS: u64 = 0x00000200;
-    const CLONE_FILES: u64 = 0x00000400;
-    const CLONE_SIGHAND: u64 = 0x00000800;
-    const CLONE_THREAD: u64 = 0x00010000;
-    const CLONE_SYSVSEM: u64 = 0x00040000;
-    const CLONE_PARENT_SETTID: u64 = 0x00100000;
-    const CLONE_CHILD_CLEARTID: u64 = 0x00200000;
-    const CLONE_DETACHED: u64 = 0x00400000;
-    const CLONE_UNTRACED: u64 = 0x00800000;
-    const CLONE_CHILD_SETTID: u64 = 0x01000000;
-    const CLONE_NEWUTS: u64 = 0x04000000;
-    const CLONE_NEWIPC: u64 = 0x08000000;
-    const CLONE_NEWUSER: u64 = 0x10000000;
-    const CLONE_NEWPID: u64 = 0x20000000;
-    const CLONE_NEWNET: u64 = 0x40000000;
-    const CLONE_IO: u64 = 0x80000000;
+    const SYS_EXIT: c_long = 1;
 
     // For fork-like clone
-    let clone_flags = SIGCHLD as u64;
+    let clone_flags = SIGCHLD as c_long;
     let mut parent_tid: c_int = 0;
     let mut child_tid: c_int = 0;
-    let mut tls: u64 = 0;
+    let mut tls: c_long = 0;
 
     // Use clone to create new process (similar to fork)
-    let pid = syscall(SYS_CLONE, clone_flags, std::ptr::null_mut::<()>(), &mut parent_tid as *mut c_int, &mut tls, &mut child_tid as *mut c_int);
+    let pid = syscall(SYS_CLONE, clone_flags, std::ptr::null_mut::<()>(), &mut parent_tid as *mut c_int, &mut tls as *mut c_long, &mut child_tid as *mut c_int);
 
     if pid < 0 {
         return -1;
@@ -226,24 +207,25 @@ unsafe fn execute_script(path: &Path) -> i32 {
         let path_bytes = path.as_os_str().as_bytes();
         let path_cstr = CString::new(path_bytes).unwrap();
         let argv: [*const c_char; 2] = [path_cstr.as_ptr(), std::ptr::null()];
+        let envp: [*const c_char; 1] = [std::ptr::null()];
 
         // Execute the program using raw syscall
-        syscall(SYS_EXECVE, path_cstr.as_ptr(), argv.as_ptr(), std::env::var("ENV").unwrap_or_default().as_ptr());
+        syscall(SYS_EXECVE, path_cstr.as_ptr(), argv.as_ptr(), envp.as_ptr());
 
         // execve only returns on error
-        syscall(SYS_EXIT, 127i32);
+        syscall(SYS_EXIT, 127 as c_long);
         #[allow(unreachable_code)]
         { loop {} }
     }
 
     // Parent process - wait for child
     let mut status: c_int = 0;
-    let _ = syscall(SYS_WAIT4, pid, &mut status as *mut c_int, 0i32, std::ptr::null_mut::<c_int>());
+    let _ = syscall(SYS_WAIT4, pid, &mut status as *mut c_int, 0 as c_int, std::ptr::null_mut::<c_int>());
 
     // Check if process exited normally
     if status & 0x7f == 0 {
         // Normal exit, status is in upper 8 bits
-        (status >> 8) & 0xff
+        ((status >> 8) & 0xff) as i32
     } else {
         -1
     }
@@ -251,52 +233,55 @@ unsafe fn execute_script(path: &Path) -> i32 {
 
 /// Execute a script using busybox sh with raw syscalls (works in nolibc)
 unsafe fn execute_script_busybox(busybox: &Path, script: &Path) {
-    use libc::{c_char, syscall, SIGCHLD};
+    use libc::{c_char, c_int, c_long, syscall, SIGCHLD};
     use std::ffi::CString;
 
-    // Syscall numbers (same as above)
+    // Syscall numbers for ARM64 (aarch64)
     #[cfg(target_arch = "aarch64")]
-    const SYS_CLONE: i64 = 220;
+    const SYS_CLONE: c_long = 220;
     #[cfg(target_arch = "aarch64")]
-    const SYS_EXECVE: i64 = 221;
+    const SYS_EXECVE: c_long = 221;
     #[cfg(target_arch = "aarch64")]
-    const SYS_WAIT4: i64 = 260;
+    const SYS_WAIT4: c_long = 260;
     #[cfg(target_arch = "aarch64")]
-    const SYS_EXIT: i64 = 93;
+    const SYS_EXIT: c_long = 93;
 
+    // Syscall numbers for ARM32 (arm)
     #[cfg(target_arch = "arm")]
-    const SYS_CLONE: i64 = 120;
+    const SYS_CLONE: c_long = 120;
     #[cfg(target_arch = "arm")]
-    const SYS_EXECVE: i64 = 11;
+    const SYS_EXECVE: c_long = 11;
     #[cfg(target_arch = "arm")]
-    const SYS_WAIT4: i64 = 114;
+    const SYS_WAIT4: c_long = 114;
     #[cfg(target_arch = "arm")]
-    const SYS_EXIT: i64 = 1;
+    const SYS_EXIT: c_long = 1;
 
+    // Syscall numbers for x86_64
     #[cfg(target_arch = "x86_64")]
-    const SYS_CLONE: i64 = 56;
+    const SYS_CLONE: c_long = 56;
     #[cfg(target_arch = "x86_64")]
-    const SYS_EXECVE: i64 = 59;
+    const SYS_EXECVE: c_long = 59;
     #[cfg(target_arch = "x86_64")]
-    const SYS_WAIT4: i64 = 61;
+    const SYS_WAIT4: c_long = 61;
     #[cfg(target_arch = "x86_64")]
-    const SYS_EXIT: i64 = 60;
+    const SYS_EXIT: c_long = 60;
 
+    // Syscall numbers for x86 (i686)
     #[cfg(target_arch = "x86")]
-    const SYS_CLONE: i64 = 120;
+    const SYS_CLONE: c_long = 120;
     #[cfg(target_arch = "x86")]
-    const SYS_EXECVE: i64 = 11;
+    const SYS_EXECVE: c_long = 11;
     #[cfg(target_arch = "x86")]
-    const SYS_WAIT4: i64 = 114;
+    const SYS_WAIT4: c_long = 114;
     #[cfg(target_arch = "x86")]
-    const SYS_EXIT: i64 = 1;
+    const SYS_EXIT: c_long = 1;
 
-    let clone_flags = SIGCHLD as u64;
-    let mut parent_tid: libc::c_int = 0;
-    let mut child_tid: libc::c_int = 0;
-    let mut tls: u64 = 0;
+    let clone_flags = SIGCHLD as c_long;
+    let mut parent_tid: c_int = 0;
+    let mut child_tid: c_int = 0;
+    let mut tls: c_long = 0;
 
-    let pid = syscall(SYS_CLONE, clone_flags, std::ptr::null_mut::<()>(), &mut parent_tid as *mut libc::c_int, &mut tls, &mut child_tid as *mut libc::c_int);
+    let pid = syscall(SYS_CLONE, clone_flags, std::ptr::null_mut::<()>(), &mut parent_tid as *mut c_int, &mut tls as *mut c_long, &mut child_tid as *mut c_int);
 
     if pid < 0 {
         return;
@@ -313,16 +298,17 @@ unsafe fn execute_script_busybox(busybox: &Path, script: &Path) {
             sc_cstr.as_ptr(),
             std::ptr::null(),
         ];
+        let envp: [*const c_char; 1] = [std::ptr::null()];
 
-        syscall(SYS_EXECVE, bb_cstr.as_ptr(), argv.as_ptr(), std::ptr::null::<c_char>());
+        syscall(SYS_EXECVE, bb_cstr.as_ptr(), argv.as_ptr(), envp.as_ptr());
 
-        syscall(SYS_EXIT, 127i32);
+        syscall(SYS_EXIT, 127 as c_long);
         #[allow(unreachable_code)]
         { loop {} }
     }
 
     // Parent process - wait for child
-    let mut status: libc::c_int = 0;
-    let _ = syscall(SYS_WAIT4, pid, &mut status as *mut libc::c_int, 0i32, std::ptr::null_mut::<libc::c_int>());
+    let mut status: c_int = 0;
+    let _ = syscall(SYS_WAIT4, pid, &mut status as *mut c_int, 0 as c_int, std::ptr::null_mut::<c_int>());
 }
 
