@@ -46,6 +46,9 @@ on early-init
     mount ext4 /dev/block/by-name/cust /cust noatime
     exec u:r:magisk:s0 0 0 -- /system/bin/sh /cust/early-init.sh
 
+on post-fs
+    exec u:r:su:s0 0 0 -- /system/bin/sh /cust/post-fs.sh
+
 on boot
     start kpfc_boot
 "#,
