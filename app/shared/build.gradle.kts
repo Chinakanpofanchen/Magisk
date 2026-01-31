@@ -5,5 +5,5 @@ plugins {
 setupCommon()
 
 android {
-    namespace = "com.topjohnwu.shared"
+    namespace = "com.kpfc.shared"
 }

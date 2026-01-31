@@ -224,7 +224,7 @@ private fun genStubClasses(factoryOutDir: File, appOutDir: File) {
         pkgDir.mkdirs()
         PrintStream(File(pkgDir, "$name.java")).use {
             it.println("package $pkg;")
-            it.println("public class $name extends com.topjohnwu.magisk.$type {}")
+            it.println("public class $name extends com.kpfc.magisk.$type {}")
         }
     }
 
@@ -233,7 +233,7 @@ private fun genStubClasses(factoryOutDir: File, appOutDir: File) {
 }
 
 private fun genEncryptedResources(res: ByteArray, outDir: File) {
-    val mainPkgDir = File(outDir, "com/topjohnwu/magisk")
+    val mainPkgDir = File(outDir, "com/kpfc/magisk")
     mainPkgDir.mkdirs()
 
     // Generate iv and key
@@ -253,7 +253,7 @@ private fun genEncryptedResources(res: ByteArray, outDir: File) {
     }
 
     PrintStream(File(mainPkgDir, "Bytes.java")).use {
-        it.println("package com.topjohnwu.magisk;")
+        it.println("package com.kpfc.magisk;")
         it.println("public final class Bytes {")
 
         it.byteField("key", key)

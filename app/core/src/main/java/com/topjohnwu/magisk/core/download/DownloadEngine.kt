@@ -54,7 +54,7 @@ import java.io.InputStream
 class DownloadEngine(session: DownloadSession) : DownloadSession by session, DownloadNotifier {
 
     companion object {
-        const val ACTION = "com.topjohnwu.magisk.DOWNLOAD"
+        const val ACTION = "com.kpfc.magisk.DOWNLOAD"
         const val SUBJECT_KEY = "subject"
         private const val REQUEST_CODE = 1
 
@@ -73,12 +73,12 @@ class DownloadEngine(session: DownloadSession) : DownloadSession by session, Dow
         }
 
         private fun createBroadcastIntent(context: Context, subject: Subject) =
-            context.intent<com.topjohnwu.magisk.core.Receiver>()
+            context.intent<com.kpfc.magisk.core.Receiver>()
                 .setAction(ACTION)
                 .putExtra(SUBJECT_KEY, subject)
 
         private fun createServiceIntent(context: Context, subject: Subject) =
-            context.intent<com.topjohnwu.magisk.core.Service>()
+            context.intent<com.kpfc.magisk.core.Service>()
                 .setAction(ACTION)
                 .putExtra(SUBJECT_KEY, subject)
 
