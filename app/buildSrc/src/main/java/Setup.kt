@@ -278,10 +278,10 @@ fun Project.setupMainApk() {
     setupAppCommon()
 
     android {
-        namespace = "com.Kpfc.magisk"
+        namespace = "com.kpfc.magisk"
 
         defaultConfig {
-            applicationId = "com.Kpfc.magisk"
+            applicationId = "com.kpfc.magisk"
             vectorDrawables.useSupportLibrary = true
             versionName = Config.version
             versionCode = Config.versionCode
