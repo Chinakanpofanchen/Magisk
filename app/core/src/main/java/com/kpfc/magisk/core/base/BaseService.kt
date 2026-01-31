@@ -4,7 +4,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
-import com.topjohnwu.magisk.core.patch
+import com.kpfc.magisk.core.patch
 
 open class BaseService : Service() {
     override fun attachBaseContext(base: Context) {

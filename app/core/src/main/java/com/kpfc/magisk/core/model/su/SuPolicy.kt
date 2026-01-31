@@ -1,6 +1,6 @@
 package com.kpfc.magisk.core.model.su
 
-import com.topjohnwu.magisk.core.data.magiskdb.MagiskDB
+import com.kpfc.magisk.core.data.magiskdb.MagiskDB
 
 class SuPolicy(
     val uid: Int,

@@ -8,12 +8,12 @@ import android.content.res.Resources
 import android.os.Build
 import android.os.LocaleList
 import androidx.annotation.RequiresApi
-import com.topjohnwu.magisk.core.AppApkPath
-import com.topjohnwu.magisk.core.AppContext
-import com.topjohnwu.magisk.core.Config
-import com.topjohnwu.magisk.core.R
-import com.topjohnwu.magisk.core.base.relaunch
-import com.topjohnwu.magisk.core.isRunningAsStub
+import com.kpfc.magisk.core.AppApkPath
+import com.kpfc.magisk.core.AppContext
+import com.kpfc.magisk.core.Config
+import com.kpfc.magisk.core.R
+import com.kpfc.magisk.core.base.relaunch
+import com.kpfc.magisk.core.isRunningAsStub
 import org.xmlpull.v1.XmlPullParser
 import java.util.Locale
 

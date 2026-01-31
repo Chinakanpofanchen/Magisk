@@ -7,8 +7,8 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.system.Os
 import androidx.core.content.getSystemService
-import com.topjohnwu.magisk.core.Const
-import com.topjohnwu.magisk.core.Info
+import com.kpfc.magisk.core.Const
+import com.kpfc.magisk.core.Info
 import com.topjohnwu.superuser.Shell
 import com.topjohnwu.superuser.ShellUtils
 import com.topjohnwu.superuser.ipc.RootService

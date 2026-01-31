@@ -10,9 +10,9 @@ import android.content.ContentProvider;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 
-import com.topjohnwu.magisk.dummy.DummyProvider;
-import com.topjohnwu.magisk.dummy.DummyReceiver;
-import com.topjohnwu.magisk.dummy.DummyService;
+import com.kpfc.magisk.dummy.DummyProvider;
+import com.kpfc.magisk.dummy.DummyReceiver;
+import com.kpfc.magisk.dummy.DummyService;
 
 @SuppressLint("NewApi")
 public class DelegateComponentFactory extends AppComponentFactory {

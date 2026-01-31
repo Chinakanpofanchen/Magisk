@@ -3,9 +3,9 @@ package com.kpfc.magisk;
 import static android.R.string.no;
 import static android.R.string.ok;
 import static android.R.string.yes;
-import static com.topjohnwu.magisk.R.string.dling;
-import static com.topjohnwu.magisk.R.string.no_internet_msg;
-import static com.topjohnwu.magisk.R.string.upgrade_msg;
+import static com.kpfc.magisk.R.string.dling;
+import static com.kpfc.magisk.R.string.no_internet_msg;
+import static com.kpfc.magisk.R.string.upgrade_msg;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,9 +23,9 @@ import android.system.OsConstants;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 
-import com.topjohnwu.magisk.net.Networking;
-import com.topjohnwu.magisk.net.Request;
-import com.topjohnwu.magisk.utils.APKInstall;
+import com.kpfc.magisk.net.Networking;
+import com.kpfc.magisk.net.Request;
+import com.kpfc.magisk.utils.APKInstall;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

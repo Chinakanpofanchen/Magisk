@@ -1,6 +1,6 @@
 package com.kpfc.magisk;
 
-import static com.topjohnwu.magisk.BuildConfig.APPLICATION_ID;
+import static com.kpfc.magisk.BuildConfig.APPLICATION_ID;
 
 import android.app.AppComponentFactory;
 import android.app.Application;
@@ -14,8 +14,8 @@ import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.util.Log;
 
-import com.topjohnwu.magisk.utils.APKInstall;
-import com.topjohnwu.magisk.utils.DynamicClassLoader;
+import com.kpfc.magisk.utils.APKInstall;
+import com.kpfc.magisk.utils.DynamicClassLoader;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -1,9 +1,9 @@
 package com.kpfc.magisk.ui.home
 
-import com.topjohnwu.magisk.R
-import com.topjohnwu.magisk.core.Const
-import com.topjohnwu.magisk.databinding.RvItem
-import com.topjohnwu.magisk.core.R as CoreR
+import com.kpfc.magisk.R
+import com.kpfc.magisk.core.Const
+import com.kpfc.magisk.databinding.RvItem
+import com.kpfc.magisk.core.R as CoreR
 
 interface Dev {
     val name: String

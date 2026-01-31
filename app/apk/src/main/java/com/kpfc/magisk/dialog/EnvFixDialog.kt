@@ -3,15 +3,15 @@ package com.kpfc.magisk.dialog
 import android.widget.Toast
 import androidx.core.os.postDelayed
 import androidx.lifecycle.lifecycleScope
-import com.topjohnwu.magisk.core.BuildConfig
-import com.topjohnwu.magisk.core.Info
-import com.topjohnwu.magisk.core.R
-import com.topjohnwu.magisk.core.ktx.reboot
-import com.topjohnwu.magisk.core.ktx.toast
-import com.topjohnwu.magisk.core.tasks.MagiskInstaller
-import com.topjohnwu.magisk.events.DialogBuilder
-import com.topjohnwu.magisk.ui.home.HomeViewModel
-import com.topjohnwu.magisk.view.MagiskDialog
+import com.kpfc.magisk.core.BuildConfig
+import com.kpfc.magisk.core.Info
+import com.kpfc.magisk.core.R
+import com.kpfc.magisk.core.ktx.reboot
+import com.kpfc.magisk.core.ktx.toast
+import com.kpfc.magisk.core.tasks.MagiskInstaller
+import com.kpfc.magisk.events.DialogBuilder
+import com.kpfc.magisk.ui.home.HomeViewModel
+import com.kpfc.magisk.view.MagiskDialog
 import com.topjohnwu.superuser.internal.UiThreadHandler
 import kotlinx.coroutines.launch
 

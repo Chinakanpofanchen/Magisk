@@ -9,12 +9,12 @@ import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import androidx.core.content.getSystemService
 import androidx.core.graphics.drawable.toIcon
-import com.topjohnwu.magisk.core.AppContext
-import com.topjohnwu.magisk.core.R
-import com.topjohnwu.magisk.core.download.DownloadEngine
-import com.topjohnwu.magisk.core.download.Subject
-import com.topjohnwu.magisk.core.ktx.getBitmap
-import com.topjohnwu.magisk.core.ktx.selfLaunchIntent
+import com.kpfc.magisk.core.AppContext
+import com.kpfc.magisk.core.R
+import com.kpfc.magisk.core.download.DownloadEngine
+import com.kpfc.magisk.core.download.Subject
+import com.kpfc.magisk.core.ktx.getBitmap
+import com.kpfc.magisk.core.ktx.selfLaunchIntent
 import java.util.concurrent.atomic.AtomicInteger
 
 @Suppress("DEPRECATION")

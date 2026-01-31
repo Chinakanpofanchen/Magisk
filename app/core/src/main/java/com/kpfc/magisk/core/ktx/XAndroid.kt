@@ -22,9 +22,9 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.getSystemService
-import com.topjohnwu.magisk.core.utils.LocaleSetting
-import com.topjohnwu.magisk.core.utils.RootUtils
-import com.topjohnwu.magisk.utils.APKInstall
+import com.kpfc.magisk.core.utils.LocaleSetting
+import com.kpfc.magisk.core.utils.RootUtils
+import com.kpfc.magisk.utils.APKInstall
 import com.topjohnwu.superuser.internal.UiThreadHandler
 import java.io.File
 

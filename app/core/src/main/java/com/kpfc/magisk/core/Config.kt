@@ -2,10 +2,10 @@ package com.kpfc.magisk.core
 
 import android.os.Bundle
 import androidx.core.content.edit
-import com.topjohnwu.magisk.core.di.ServiceLocator
-import com.topjohnwu.magisk.core.repository.DBConfig
-import com.topjohnwu.magisk.core.repository.PreferenceConfig
-import com.topjohnwu.magisk.core.utils.LocaleSetting
+import com.kpfc.magisk.core.di.ServiceLocator
+import com.kpfc.magisk.core.repository.DBConfig
+import com.kpfc.magisk.core.repository.PreferenceConfig
+import com.kpfc.magisk.core.utils.LocaleSetting
 import kotlinx.coroutines.GlobalScope
 
 object Config : PreferenceConfig, DBConfig {

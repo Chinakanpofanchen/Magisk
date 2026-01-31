@@ -10,20 +10,20 @@ import androidx.databinding.Bindable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.topjohnwu.magisk.BR
-import com.topjohnwu.magisk.R
-import com.topjohnwu.magisk.arch.BaseViewModel
-import com.topjohnwu.magisk.core.AppContext
-import com.topjohnwu.magisk.core.BuildConfig.APP_VERSION_CODE
-import com.topjohnwu.magisk.core.Config
-import com.topjohnwu.magisk.core.Info
-import com.topjohnwu.magisk.core.base.ContentResultCallback
-import com.topjohnwu.magisk.core.ktx.toast
-import com.topjohnwu.magisk.core.repository.NetworkService
-import com.topjohnwu.magisk.databinding.set
-import com.topjohnwu.magisk.dialog.SecondSlotWarningDialog
-import com.topjohnwu.magisk.events.GetContentEvent
-import com.topjohnwu.magisk.ui.flash.FlashFragment
+import com.kpfc.magisk.BR
+import com.kpfc.magisk.R
+import com.kpfc.magisk.arch.BaseViewModel
+import com.kpfc.magisk.core.AppContext
+import com.kpfc.magisk.core.BuildConfig.APP_VERSION_CODE
+import com.kpfc.magisk.core.Config
+import com.kpfc.magisk.core.Info
+import com.kpfc.magisk.core.base.ContentResultCallback
+import com.kpfc.magisk.core.ktx.toast
+import com.kpfc.magisk.core.repository.NetworkService
+import com.kpfc.magisk.databinding.set
+import com.kpfc.magisk.dialog.SecondSlotWarningDialog
+import com.kpfc.magisk.events.GetContentEvent
+import com.kpfc.magisk.ui.flash.FlashFragment
 import io.noties.markwon.Markwon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,7 +32,7 @@ import kotlinx.parcelize.Parcelize
 import timber.log.Timber
 import java.io.File
 import java.io.IOException
-import com.topjohnwu.magisk.core.R as CoreR
+import com.kpfc.magisk.core.R as CoreR
 
 class InstallViewModel(svc: NetworkService, markwon: Markwon) : BaseViewModel() {
 

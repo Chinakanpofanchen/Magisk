@@ -5,10 +5,10 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.ServiceCompat
 import androidx.core.content.IntentCompat
-import com.topjohnwu.magisk.core.base.BaseService
-import com.topjohnwu.magisk.core.download.DownloadEngine
-import com.topjohnwu.magisk.core.download.DownloadSession
-import com.topjohnwu.magisk.core.download.Subject
+import com.kpfc.magisk.core.base.BaseService
+import com.kpfc.magisk.core.download.DownloadEngine
+import com.kpfc.magisk.core.download.DownloadSession
+import com.kpfc.magisk.core.download.Subject
 
 class Service : BaseService(), DownloadSession {
 

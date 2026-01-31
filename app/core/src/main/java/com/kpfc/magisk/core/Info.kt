@@ -3,10 +3,10 @@ package com.kpfc.magisk.core
 import android.app.KeyguardManager
 import android.os.Build
 import androidx.lifecycle.MutableLiveData
-import com.topjohnwu.magisk.StubApk
-import com.topjohnwu.magisk.core.ktx.getProperty
-import com.topjohnwu.magisk.core.model.UpdateInfo
-import com.topjohnwu.magisk.core.repository.NetworkService
+import com.kpfc.magisk.StubApk
+import com.kpfc.magisk.core.ktx.getProperty
+import com.kpfc.magisk.core.model.UpdateInfo
+import com.kpfc.magisk.core.repository.NetworkService
 import com.topjohnwu.superuser.CallbackList
 import com.topjohnwu.superuser.Shell
 import com.topjohnwu.superuser.ShellUtils.fastCmd

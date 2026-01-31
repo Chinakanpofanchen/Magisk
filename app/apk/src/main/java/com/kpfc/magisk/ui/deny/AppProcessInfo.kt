@@ -15,7 +15,7 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import androidx.core.os.ProcessCompat
-import com.topjohnwu.magisk.core.ktx.getLabel
+import com.kpfc.magisk.core.ktx.getLabel
 import java.util.Locale
 import java.util.TreeSet
 

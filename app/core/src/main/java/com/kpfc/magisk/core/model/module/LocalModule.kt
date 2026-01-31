@@ -1,9 +1,9 @@
 package com.kpfc.magisk.core.model.module
 
 import com.squareup.moshi.JsonDataException
-import com.topjohnwu.magisk.core.Const
-import com.topjohnwu.magisk.core.di.ServiceLocator
-import com.topjohnwu.magisk.core.utils.RootUtils
+import com.kpfc.magisk.core.Const
+import com.kpfc.magisk.core.di.ServiceLocator
+import com.kpfc.magisk.core.utils.RootUtils
 import com.topjohnwu.superuser.Shell
 import com.topjohnwu.superuser.nio.ExtendedFile
 import kotlinx.coroutines.Dispatchers

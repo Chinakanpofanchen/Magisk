@@ -10,14 +10,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavDirections
-import com.topjohnwu.magisk.core.R
-import com.topjohnwu.magisk.databinding.ObservableHost
-import com.topjohnwu.magisk.events.BackPressEvent
-import com.topjohnwu.magisk.events.DialogBuilder
-import com.topjohnwu.magisk.events.DialogEvent
-import com.topjohnwu.magisk.events.NavigationEvent
-import com.topjohnwu.magisk.events.PermissionEvent
-import com.topjohnwu.magisk.events.SnackbarEvent
+import com.kpfc.magisk.core.R
+import com.kpfc.magisk.databinding.ObservableHost
+import com.kpfc.magisk.events.BackPressEvent
+import com.kpfc.magisk.events.DialogBuilder
+import com.kpfc.magisk.events.DialogEvent
+import com.kpfc.magisk.events.NavigationEvent
+import com.kpfc.magisk.events.PermissionEvent
+import com.kpfc.magisk.events.SnackbarEvent
 
 abstract class BaseViewModel : ViewModel(), ObservableHost {
 

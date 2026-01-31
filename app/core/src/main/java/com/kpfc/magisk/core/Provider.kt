@@ -1,8 +1,8 @@
 package com.kpfc.magisk.core
 
 import android.os.Bundle
-import com.topjohnwu.magisk.core.base.BaseProvider
-import com.topjohnwu.magisk.core.su.SuCallbackHandler
+import com.kpfc.magisk.core.base.BaseProvider
+import com.kpfc.magisk.core.su.SuCallbackHandler
 
 class Provider : BaseProvider() {
 

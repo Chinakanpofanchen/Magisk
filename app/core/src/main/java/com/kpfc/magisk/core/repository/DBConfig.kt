@@ -1,7 +1,7 @@
 package com.kpfc.magisk.core.repository
 
-import com.topjohnwu.magisk.core.data.magiskdb.SettingsDao
-import com.topjohnwu.magisk.core.data.magiskdb.StringDao
+import com.kpfc.magisk.core.data.magiskdb.SettingsDao
+import com.kpfc.magisk.core.data.magiskdb.StringDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking

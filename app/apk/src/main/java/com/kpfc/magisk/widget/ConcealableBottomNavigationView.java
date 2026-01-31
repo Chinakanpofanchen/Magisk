@@ -14,7 +14,7 @@ import androidx.customview.view.AbsSavedState;
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.topjohnwu.magisk.R;
+import com.kpfc.magisk.R;
 
 public class ConcealableBottomNavigationView extends BottomNavigationView {
 

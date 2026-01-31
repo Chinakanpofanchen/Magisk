@@ -4,13 +4,13 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import com.topjohnwu.magisk.core.Info
-import com.topjohnwu.magisk.core.di.ServiceLocator
-import com.topjohnwu.magisk.ui.home.HomeViewModel
-import com.topjohnwu.magisk.ui.install.InstallViewModel
-import com.topjohnwu.magisk.ui.log.LogViewModel
-import com.topjohnwu.magisk.ui.superuser.SuperuserViewModel
-import com.topjohnwu.magisk.ui.surequest.SuRequestViewModel
+import com.kpfc.magisk.core.Info
+import com.kpfc.magisk.core.di.ServiceLocator
+import com.kpfc.magisk.ui.home.HomeViewModel
+import com.kpfc.magisk.ui.install.InstallViewModel
+import com.kpfc.magisk.ui.log.LogViewModel
+import com.kpfc.magisk.ui.superuser.SuperuserViewModel
+import com.kpfc.magisk.ui.surequest.SuRequestViewModel
 
 interface ViewModelHolder : LifecycleOwner, ViewModelStoreOwner {
 

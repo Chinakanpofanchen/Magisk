@@ -2,8 +2,8 @@ package com.kpfc.magisk.core
 
 import android.app.Application
 import android.content.Context
-import com.topjohnwu.magisk.StubApk
-import com.topjohnwu.magisk.core.utils.RootUtils
+import com.kpfc.magisk.StubApk
+import com.kpfc.magisk.core.utils.RootUtils
 
 open class App() : Application() {
 

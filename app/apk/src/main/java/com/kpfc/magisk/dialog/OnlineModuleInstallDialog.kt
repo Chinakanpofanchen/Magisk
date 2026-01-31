@@ -1,14 +1,14 @@
 package com.kpfc.magisk.dialog
 
 import android.content.Context
-import com.topjohnwu.magisk.core.R
-import com.topjohnwu.magisk.core.di.ServiceLocator
-import com.topjohnwu.magisk.core.download.DownloadEngine
-import com.topjohnwu.magisk.core.download.Subject
-import com.topjohnwu.magisk.core.model.module.OnlineModule
-import com.topjohnwu.magisk.ui.flash.FlashFragment
-import com.topjohnwu.magisk.view.MagiskDialog
-import com.topjohnwu.magisk.view.Notifications
+import com.kpfc.magisk.core.R
+import com.kpfc.magisk.core.di.ServiceLocator
+import com.kpfc.magisk.core.download.DownloadEngine
+import com.kpfc.magisk.core.download.Subject
+import com.kpfc.magisk.core.model.module.OnlineModule
+import com.kpfc.magisk.ui.flash.FlashFragment
+import com.kpfc.magisk.view.MagiskDialog
+import com.kpfc.magisk.view.Notifications
 import kotlinx.parcelize.Parcelize
 
 class OnlineModuleInstallDialog(private val item: OnlineModule) : MarkDownDialog() {

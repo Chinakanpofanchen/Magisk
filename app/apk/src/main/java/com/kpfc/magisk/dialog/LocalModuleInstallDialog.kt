@@ -1,12 +1,12 @@
 package com.kpfc.magisk.dialog
 
 import android.net.Uri
-import com.topjohnwu.magisk.MainDirections
-import com.topjohnwu.magisk.core.Const
-import com.topjohnwu.magisk.core.R
-import com.topjohnwu.magisk.events.DialogBuilder
-import com.topjohnwu.magisk.ui.module.ModuleViewModel
-import com.topjohnwu.magisk.view.MagiskDialog
+import com.kpfc.magisk.MainDirections
+import com.kpfc.magisk.core.Const
+import com.kpfc.magisk.core.R
+import com.kpfc.magisk.events.DialogBuilder
+import com.kpfc.magisk.ui.module.ModuleViewModel
+import com.kpfc.magisk.view.MagiskDialog
 
 class LocalModuleInstallDialog(
     private val viewModel: ModuleViewModel,

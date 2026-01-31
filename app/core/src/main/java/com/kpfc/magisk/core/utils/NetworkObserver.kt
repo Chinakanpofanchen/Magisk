@@ -11,8 +11,8 @@ import android.net.NetworkRequest
 import android.os.PowerManager
 import androidx.collection.ArraySet
 import androidx.core.content.getSystemService
-import com.topjohnwu.magisk.core.Info
-import com.topjohnwu.magisk.core.ktx.registerRuntimeReceiver
+import com.kpfc.magisk.core.Info
+import com.kpfc.magisk.core.ktx.registerRuntimeReceiver
 
 class NetworkObserver(context: Context) {
     private val manager = context.getSystemService<ConnectivityManager>()!!

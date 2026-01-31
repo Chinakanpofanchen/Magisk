@@ -1,11 +1,11 @@
 package com.kpfc.magisk.dialog
 
-import com.topjohnwu.magisk.core.AppContext
-import com.topjohnwu.magisk.core.Info
-import com.topjohnwu.magisk.core.R
-import com.topjohnwu.magisk.core.download.DownloadEngine
-import com.topjohnwu.magisk.core.download.Subject
-import com.topjohnwu.magisk.view.MagiskDialog
+import com.kpfc.magisk.core.AppContext
+import com.kpfc.magisk.core.Info
+import com.kpfc.magisk.core.R
+import com.kpfc.magisk.core.download.DownloadEngine
+import com.kpfc.magisk.core.download.Subject
+import com.kpfc.magisk.view.MagiskDialog
 import java.io.File
 
 class ManagerInstallDialog : MarkDownDialog() {

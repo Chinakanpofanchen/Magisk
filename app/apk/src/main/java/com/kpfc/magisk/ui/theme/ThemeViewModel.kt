@@ -1,10 +1,10 @@
 package com.kpfc.magisk.ui.theme
 
-import com.topjohnwu.magisk.arch.BaseViewModel
-import com.topjohnwu.magisk.core.Config
-import com.topjohnwu.magisk.dialog.DarkThemeDialog
-import com.topjohnwu.magisk.events.RecreateEvent
-import com.topjohnwu.magisk.view.TappableHeadlineItem
+import com.kpfc.magisk.arch.BaseViewModel
+import com.kpfc.magisk.core.Config
+import com.kpfc.magisk.dialog.DarkThemeDialog
+import com.kpfc.magisk.events.RecreateEvent
+import com.kpfc.magisk.view.TappableHeadlineItem
 
 class ThemeViewModel : BaseViewModel(), TappableHeadlineItem.Listener {
 

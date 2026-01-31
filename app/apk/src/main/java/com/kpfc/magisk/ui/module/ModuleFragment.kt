@@ -2,16 +2,16 @@ package com.kpfc.magisk.ui.module
 
 import android.os.Bundle
 import android.view.View
-import com.topjohnwu.magisk.R
-import com.topjohnwu.magisk.arch.BaseFragment
-import com.topjohnwu.magisk.arch.viewModel
-import com.topjohnwu.magisk.core.utils.MediaStoreUtils.displayName
-import com.topjohnwu.magisk.databinding.FragmentModuleMd2Binding
+import com.kpfc.magisk.R
+import com.kpfc.magisk.arch.BaseFragment
+import com.kpfc.magisk.arch.viewModel
+import com.kpfc.magisk.core.utils.MediaStoreUtils.displayName
+import com.kpfc.magisk.databinding.FragmentModuleMd2Binding
 import rikka.recyclerview.addEdgeSpacing
 import rikka.recyclerview.addInvalidateItemDecorationsObserver
 import rikka.recyclerview.addItemSpacing
 import rikka.recyclerview.fixEdgeEffect
-import com.topjohnwu.magisk.core.R as CoreR
+import com.kpfc.magisk.core.R as CoreR
 
 class ModuleFragment : BaseFragment<FragmentModuleMd2Binding>() {
 

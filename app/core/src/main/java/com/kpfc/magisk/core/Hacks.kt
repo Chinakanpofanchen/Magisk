@@ -8,9 +8,9 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
-import com.topjohnwu.magisk.StubApk
-import com.topjohnwu.magisk.core.ktx.unwrap
-import com.topjohnwu.magisk.core.utils.LocaleSetting
+import com.kpfc.magisk.StubApk
+import com.kpfc.magisk.core.ktx.unwrap
+import com.kpfc.magisk.core.utils.LocaleSetting
 
 fun Resources.addAssetPath(path: String) = StubApk.addAssetPath(this, path)
 

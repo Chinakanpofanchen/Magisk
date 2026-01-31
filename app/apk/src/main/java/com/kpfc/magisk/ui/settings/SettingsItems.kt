@@ -6,25 +6,25 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import androidx.databinding.Bindable
-import com.topjohnwu.magisk.BR
-import com.topjohnwu.magisk.R
-import com.topjohnwu.magisk.core.BuildConfig
-import com.topjohnwu.magisk.core.Config
-import com.topjohnwu.magisk.core.Const
-import com.topjohnwu.magisk.core.Info
-import com.topjohnwu.magisk.core.ktx.activity
-import com.topjohnwu.magisk.core.tasks.AppMigration
-import com.topjohnwu.magisk.core.utils.LocaleSetting
-import com.topjohnwu.magisk.core.utils.MediaStoreUtils
-import com.topjohnwu.magisk.databinding.DialogSettingsAppNameBinding
-import com.topjohnwu.magisk.databinding.DialogSettingsDownloadPathBinding
-import com.topjohnwu.magisk.databinding.DialogSettingsUpdateChannelBinding
-import com.topjohnwu.magisk.databinding.set
-import com.topjohnwu.magisk.utils.TextHolder
-import com.topjohnwu.magisk.utils.asText
-import com.topjohnwu.magisk.view.MagiskDialog
+import com.kpfc.magisk.BR
+import com.kpfc.magisk.R
+import com.kpfc.magisk.core.BuildConfig
+import com.kpfc.magisk.core.Config
+import com.kpfc.magisk.core.Const
+import com.kpfc.magisk.core.Info
+import com.kpfc.magisk.core.ktx.activity
+import com.kpfc.magisk.core.tasks.AppMigration
+import com.kpfc.magisk.core.utils.LocaleSetting
+import com.kpfc.magisk.core.utils.MediaStoreUtils
+import com.kpfc.magisk.databinding.DialogSettingsAppNameBinding
+import com.kpfc.magisk.databinding.DialogSettingsDownloadPathBinding
+import com.kpfc.magisk.databinding.DialogSettingsUpdateChannelBinding
+import com.kpfc.magisk.databinding.set
+import com.kpfc.magisk.utils.TextHolder
+import com.kpfc.magisk.utils.asText
+import com.kpfc.magisk.view.MagiskDialog
 import com.topjohnwu.superuser.Shell
-import com.topjohnwu.magisk.core.R as CoreR
+import com.kpfc.magisk.core.R as CoreR
 
 // --- Customization
 

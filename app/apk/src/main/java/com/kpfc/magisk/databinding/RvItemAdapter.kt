@@ -12,7 +12,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
-import com.topjohnwu.magisk.BR
+import com.kpfc.magisk.BR
 
 class RvItemAdapter<T: RvItem>(
     val items: List<T>,

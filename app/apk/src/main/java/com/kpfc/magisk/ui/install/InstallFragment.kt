@@ -1,10 +1,10 @@
 package com.kpfc.magisk.ui.install
 
-import com.topjohnwu.magisk.R
-import com.topjohnwu.magisk.arch.BaseFragment
-import com.topjohnwu.magisk.arch.viewModel
-import com.topjohnwu.magisk.databinding.FragmentInstallMd2Binding
-import com.topjohnwu.magisk.core.R as CoreR
+import com.kpfc.magisk.R
+import com.kpfc.magisk.arch.BaseFragment
+import com.kpfc.magisk.arch.viewModel
+import com.kpfc.magisk.databinding.FragmentInstallMd2Binding
+import com.kpfc.magisk.core.R as CoreR
 
 class InstallFragment : BaseFragment<FragmentInstallMd2Binding>() {
 

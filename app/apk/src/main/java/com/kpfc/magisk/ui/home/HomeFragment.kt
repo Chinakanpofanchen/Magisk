@@ -10,15 +10,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.MenuProvider
-import com.topjohnwu.magisk.R
-import com.topjohnwu.magisk.arch.BaseFragment
-import com.topjohnwu.magisk.arch.viewModel
-import com.topjohnwu.magisk.core.Info
-import com.topjohnwu.magisk.core.download.DownloadEngine
-import com.topjohnwu.magisk.databinding.FragmentHomeMd2Binding
-import com.topjohnwu.magisk.core.R as CoreR
+import com.kpfc.magisk.R
+import com.kpfc.magisk.arch.BaseFragment
+import com.kpfc.magisk.arch.viewModel
+import com.kpfc.magisk.core.Info
+import com.kpfc.magisk.core.download.DownloadEngine
+import com.kpfc.magisk.databinding.FragmentHomeMd2Binding
+import com.kpfc.magisk.core.R as CoreR
 import androidx.navigation.findNavController
-import com.topjohnwu.magisk.arch.NavigationActivity
+import com.kpfc.magisk.arch.NavigationActivity
 
 class HomeFragment : BaseFragment<FragmentHomeMd2Binding>(), MenuProvider {
 

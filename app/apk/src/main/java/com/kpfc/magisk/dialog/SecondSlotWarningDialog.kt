@@ -1,8 +1,8 @@
 package com.kpfc.magisk.dialog
 
-import com.topjohnwu.magisk.core.R
-import com.topjohnwu.magisk.events.DialogBuilder
-import com.topjohnwu.magisk.view.MagiskDialog
+import com.kpfc.magisk.core.R
+import com.kpfc.magisk.events.DialogBuilder
+import com.kpfc.magisk.view.MagiskDialog
 
 class SecondSlotWarningDialog : DialogBuilder {
 

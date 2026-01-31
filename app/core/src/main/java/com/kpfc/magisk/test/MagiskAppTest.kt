@@ -6,10 +6,10 @@ import android.os.Build
 import android.os.ParcelFileDescriptor.AutoCloseInputStream
 import androidx.annotation.Keep
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.topjohnwu.magisk.core.Config
-import com.topjohnwu.magisk.core.Info
-import com.topjohnwu.magisk.core.di.ServiceLocator
-import com.topjohnwu.magisk.core.model.su.SuPolicy
+import com.kpfc.magisk.core.Config
+import com.kpfc.magisk.core.Info
+import com.kpfc.magisk.core.di.ServiceLocator
+import com.kpfc.magisk.core.model.su.SuPolicy
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull

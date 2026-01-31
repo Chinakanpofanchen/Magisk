@@ -4,7 +4,7 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.topjohnwu.magisk.core.ktx.getLabel
+import com.kpfc.magisk.core.ktx.getLabel
 
 @Entity(tableName = "logs")
 class SuLog(

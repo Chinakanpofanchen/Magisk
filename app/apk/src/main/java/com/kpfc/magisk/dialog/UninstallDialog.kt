@@ -3,14 +3,14 @@ package com.kpfc.magisk.dialog
 import android.app.ProgressDialog
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
-import com.topjohnwu.magisk.arch.NavigationActivity
-import com.topjohnwu.magisk.arch.UIActivity
-import com.topjohnwu.magisk.core.R
-import com.topjohnwu.magisk.core.ktx.toast
-import com.topjohnwu.magisk.core.tasks.MagiskInstaller
-import com.topjohnwu.magisk.events.DialogBuilder
-import com.topjohnwu.magisk.ui.flash.FlashFragment
-import com.topjohnwu.magisk.view.MagiskDialog
+import com.kpfc.magisk.arch.NavigationActivity
+import com.kpfc.magisk.arch.UIActivity
+import com.kpfc.magisk.core.R
+import com.kpfc.magisk.core.ktx.toast
+import com.kpfc.magisk.core.tasks.MagiskInstaller
+import com.kpfc.magisk.events.DialogBuilder
+import com.kpfc.magisk.ui.flash.FlashFragment
+import com.kpfc.magisk.view.MagiskDialog
 import kotlinx.coroutines.launch
 
 class UninstallDialog : DialogBuilder {

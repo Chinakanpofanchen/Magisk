@@ -6,13 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import com.topjohnwu.magisk.BR
-import com.topjohnwu.magisk.R
-import com.topjohnwu.magisk.arch.BaseFragment
-import com.topjohnwu.magisk.arch.viewModel
-import com.topjohnwu.magisk.databinding.FragmentThemeMd2Binding
-import com.topjohnwu.magisk.databinding.ItemThemeBindingImpl
-import com.topjohnwu.magisk.core.R as CoreR
+import com.kpfc.magisk.BR
+import com.kpfc.magisk.R
+import com.kpfc.magisk.arch.BaseFragment
+import com.kpfc.magisk.arch.viewModel
+import com.kpfc.magisk.databinding.FragmentThemeMd2Binding
+import com.kpfc.magisk.databinding.ItemThemeBindingImpl
+import com.kpfc.magisk.core.R as CoreR
 
 class ThemeFragment : BaseFragment<FragmentThemeMd2Binding>() {
 

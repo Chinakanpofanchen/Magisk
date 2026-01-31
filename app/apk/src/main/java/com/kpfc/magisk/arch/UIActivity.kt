@@ -17,14 +17,14 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.google.android.material.snackbar.Snackbar
-import com.topjohnwu.magisk.BR
-import com.topjohnwu.magisk.R
-import com.topjohnwu.magisk.core.Config
-import com.topjohnwu.magisk.core.base.ActivityExtension
-import com.topjohnwu.magisk.core.base.IActivityExtension
-import com.topjohnwu.magisk.core.isRunningAsStub
-import com.topjohnwu.magisk.core.ktx.reflectField
-import com.topjohnwu.magisk.core.wrap
+import com.kpfc.magisk.BR
+import com.kpfc.magisk.R
+import com.kpfc.magisk.core.Config
+import com.kpfc.magisk.core.base.ActivityExtension
+import com.kpfc.magisk.core.base.IActivityExtension
+import com.kpfc.magisk.core.isRunningAsStub
+import com.kpfc.magisk.core.ktx.reflectField
+import com.kpfc.magisk.core.wrap
 import rikka.insets.WindowInsetsHelper
 import rikka.layoutinflater.view.LayoutInflaterFactory
 

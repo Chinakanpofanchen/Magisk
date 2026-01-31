@@ -2,9 +2,9 @@ package com.kpfc.magisk;
 
 import android.content.pm.PackageInfo;
 
-import com.topjohnwu.magisk.dummy.DummyProvider;
-import com.topjohnwu.magisk.dummy.DummyReceiver;
-import com.topjohnwu.magisk.dummy.DummyService;
+import com.kpfc.magisk.dummy.DummyProvider;
+import com.kpfc.magisk.dummy.DummyReceiver;
+import com.kpfc.magisk.dummy.DummyService;
 
 import java.util.HashMap;
 import java.util.Map;

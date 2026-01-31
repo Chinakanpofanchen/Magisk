@@ -2,7 +2,7 @@ package com.kpfc.magisk.net;
 
 import android.os.AsyncTask;
 
-import com.topjohnwu.magisk.utils.APKInstall;
+import com.kpfc.magisk.utils.APKInstall;
 
 import org.json.JSONArray;
 import org.json.JSONException;

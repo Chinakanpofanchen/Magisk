@@ -12,12 +12,12 @@ import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
-import com.topjohnwu.magisk.R
-import com.topjohnwu.magisk.arch.BaseFragment
-import com.topjohnwu.magisk.arch.viewModel
-import com.topjohnwu.magisk.core.ktx.toast
-import com.topjohnwu.magisk.databinding.FragmentActionMd2Binding
-import com.topjohnwu.magisk.core.R as CoreR
+import com.kpfc.magisk.R
+import com.kpfc.magisk.arch.BaseFragment
+import com.kpfc.magisk.arch.viewModel
+import com.kpfc.magisk.core.ktx.toast
+import com.kpfc.magisk.databinding.FragmentActionMd2Binding
+import com.kpfc.magisk.core.R as CoreR
 
 class ActionFragment : BaseFragment<FragmentActionMd2Binding>(), MenuProvider {
 

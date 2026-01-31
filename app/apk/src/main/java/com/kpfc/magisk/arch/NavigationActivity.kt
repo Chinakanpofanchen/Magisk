@@ -7,7 +7,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.navOptions
-import com.topjohnwu.magisk.utils.AccessibilityUtils
+import com.kpfc.magisk.utils.AccessibilityUtils
 
 abstract class NavigationActivity<Binding : ViewDataBinding> : UIActivity<Binding>() {
 

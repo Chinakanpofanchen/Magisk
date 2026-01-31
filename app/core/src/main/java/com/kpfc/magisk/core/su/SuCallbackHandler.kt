@@ -3,15 +3,15 @@ package com.kpfc.magisk.core.su
 import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
-import com.topjohnwu.magisk.core.BuildConfig
-import com.topjohnwu.magisk.core.Config
-import com.topjohnwu.magisk.core.R
-import com.topjohnwu.magisk.core.di.ServiceLocator
-import com.topjohnwu.magisk.core.ktx.getLabel
-import com.topjohnwu.magisk.core.ktx.getPackageInfo
-import com.topjohnwu.magisk.core.ktx.toast
-import com.topjohnwu.magisk.core.model.su.SuPolicy
-import com.topjohnwu.magisk.core.model.su.createSuLog
+import com.kpfc.magisk.core.BuildConfig
+import com.kpfc.magisk.core.Config
+import com.kpfc.magisk.core.R
+import com.kpfc.magisk.core.di.ServiceLocator
+import com.kpfc.magisk.core.ktx.getLabel
+import com.kpfc.magisk.core.ktx.getPackageInfo
+import com.kpfc.magisk.core.ktx.toast
+import com.kpfc.magisk.core.model.su.SuPolicy
+import com.kpfc.magisk.core.model.su.createSuLog
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 

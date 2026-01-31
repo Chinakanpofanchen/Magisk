@@ -8,15 +8,15 @@ import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuProvider
 import androidx.recyclerview.widget.RecyclerView
-import com.topjohnwu.magisk.R
-import com.topjohnwu.magisk.arch.BaseFragment
-import com.topjohnwu.magisk.arch.viewModel
-import com.topjohnwu.magisk.core.ktx.hideKeyboard
-import com.topjohnwu.magisk.databinding.FragmentDenyMd2Binding
+import com.kpfc.magisk.R
+import com.kpfc.magisk.arch.BaseFragment
+import com.kpfc.magisk.arch.viewModel
+import com.kpfc.magisk.core.ktx.hideKeyboard
+import com.kpfc.magisk.databinding.FragmentDenyMd2Binding
 import rikka.recyclerview.addEdgeSpacing
 import rikka.recyclerview.addItemSpacing
 import rikka.recyclerview.fixEdgeEffect
-import com.topjohnwu.magisk.core.R as CoreR
+import com.kpfc.magisk.core.R as CoreR
 
 class DenyListFragment : BaseFragment<FragmentDenyMd2Binding>(), MenuProvider {
 

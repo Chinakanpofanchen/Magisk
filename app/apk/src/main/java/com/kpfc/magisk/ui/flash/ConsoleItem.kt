@@ -5,11 +5,11 @@ import android.widget.TextView
 import androidx.core.view.updateLayoutParams
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
-import com.topjohnwu.magisk.R
-import com.topjohnwu.magisk.databinding.DiffItem
-import com.topjohnwu.magisk.databinding.ItemWrapper
-import com.topjohnwu.magisk.databinding.RvItem
-import com.topjohnwu.magisk.databinding.ViewAwareItem
+import com.kpfc.magisk.R
+import com.kpfc.magisk.databinding.DiffItem
+import com.kpfc.magisk.databinding.ItemWrapper
+import com.kpfc.magisk.databinding.RvItem
+import com.kpfc.magisk.databinding.ViewAwareItem
 import kotlin.math.max
 
 class ConsoleItem(

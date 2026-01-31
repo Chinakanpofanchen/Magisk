@@ -2,15 +2,15 @@ package com.kpfc.magisk.ui.superuser
 
 import android.graphics.drawable.Drawable
 import androidx.databinding.Bindable
-import com.topjohnwu.magisk.BR
-import com.topjohnwu.magisk.R
-import com.topjohnwu.magisk.core.Config
-import com.topjohnwu.magisk.core.model.su.SuPolicy
-import com.topjohnwu.magisk.databinding.DiffItem
-import com.topjohnwu.magisk.databinding.ItemWrapper
-import com.topjohnwu.magisk.databinding.ObservableRvItem
-import com.topjohnwu.magisk.databinding.set
-import com.topjohnwu.magisk.core.R as CoreR
+import com.kpfc.magisk.BR
+import com.kpfc.magisk.R
+import com.kpfc.magisk.core.Config
+import com.kpfc.magisk.core.model.su.SuPolicy
+import com.kpfc.magisk.databinding.DiffItem
+import com.kpfc.magisk.databinding.ItemWrapper
+import com.kpfc.magisk.databinding.ObservableRvItem
+import com.kpfc.magisk.databinding.set
+import com.kpfc.magisk.core.R as CoreR
 
 class PolicyRvItem(
     private val viewModel: SuperuserViewModel,

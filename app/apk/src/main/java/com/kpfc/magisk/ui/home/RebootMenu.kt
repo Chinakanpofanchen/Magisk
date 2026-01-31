@@ -7,10 +7,10 @@ import android.view.ContextThemeWrapper
 import android.view.MenuItem
 import android.widget.PopupMenu
 import androidx.core.content.getSystemService
-import com.topjohnwu.magisk.R
-import com.topjohnwu.magisk.core.Config
-import com.topjohnwu.magisk.core.Const
-import com.topjohnwu.magisk.core.ktx.reboot as systemReboot
+import com.kpfc.magisk.R
+import com.kpfc.magisk.core.Config
+import com.kpfc.magisk.core.Const
+import com.kpfc.magisk.core.ktx.reboot as systemReboot
 
 object RebootMenu {
 

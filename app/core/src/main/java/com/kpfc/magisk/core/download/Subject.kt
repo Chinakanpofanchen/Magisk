@@ -7,11 +7,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Parcelable
 import androidx.core.net.toUri
-import com.topjohnwu.magisk.core.Info
-import com.topjohnwu.magisk.core.model.UpdateInfo
-import com.topjohnwu.magisk.core.model.module.OnlineModule
-import com.topjohnwu.magisk.core.utils.MediaStoreUtils
-import com.topjohnwu.magisk.view.Notifications
+import com.kpfc.magisk.core.Info
+import com.kpfc.magisk.core.model.UpdateInfo
+import com.kpfc.magisk.core.model.module.OnlineModule
+import com.kpfc.magisk.core.utils.MediaStoreUtils
+import com.kpfc.magisk.view.Notifications
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import java.io.File

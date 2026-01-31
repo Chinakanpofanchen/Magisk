@@ -1,10 +1,10 @@
 package com.kpfc.magisk.core.repository
 
-import com.topjohnwu.magisk.core.Const
-import com.topjohnwu.magisk.core.Info
-import com.topjohnwu.magisk.core.data.SuLogDao
-import com.topjohnwu.magisk.core.ktx.await
-import com.topjohnwu.magisk.core.model.su.SuLog
+import com.kpfc.magisk.core.Const
+import com.kpfc.magisk.core.Info
+import com.kpfc.magisk.core.data.SuLogDao
+import com.kpfc.magisk.core.ktx.await
+import com.kpfc.magisk.core.model.su.SuLog
 import com.topjohnwu.superuser.Shell
 
 

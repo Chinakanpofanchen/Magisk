@@ -19,18 +19,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.shape.MaterialShapeDrawable
-import com.topjohnwu.magisk.BR
-import com.topjohnwu.magisk.R
-import com.topjohnwu.magisk.arch.UIActivity
-import com.topjohnwu.magisk.databinding.DialogMagiskBaseBinding
-import com.topjohnwu.magisk.databinding.DiffItem
-import com.topjohnwu.magisk.databinding.ItemWrapper
-import com.topjohnwu.magisk.databinding.ObservableHost
-import com.topjohnwu.magisk.databinding.RvItem
-import com.topjohnwu.magisk.databinding.bindExtra
-import com.topjohnwu.magisk.databinding.set
-import com.topjohnwu.magisk.databinding.setAdapter
-import com.topjohnwu.magisk.view.MagiskDialog.DialogClickListener
+import com.kpfc.magisk.BR
+import com.kpfc.magisk.R
+import com.kpfc.magisk.arch.UIActivity
+import com.kpfc.magisk.databinding.DialogMagiskBaseBinding
+import com.kpfc.magisk.databinding.DiffItem
+import com.kpfc.magisk.databinding.ItemWrapper
+import com.kpfc.magisk.databinding.ObservableHost
+import com.kpfc.magisk.databinding.RvItem
+import com.kpfc.magisk.databinding.bindExtra
+import com.kpfc.magisk.databinding.set
+import com.kpfc.magisk.databinding.setAdapter
+import com.kpfc.magisk.view.MagiskDialog.DialogClickListener
 
 typealias DialogButtonClickListener = (DialogInterface) -> Unit
 

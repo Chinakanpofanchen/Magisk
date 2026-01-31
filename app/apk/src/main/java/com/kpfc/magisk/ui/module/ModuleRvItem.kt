@@ -1,18 +1,18 @@
 package com.kpfc.magisk.ui.module
 
 import androidx.databinding.Bindable
-import com.topjohnwu.magisk.BR
-import com.topjohnwu.magisk.R
-import com.topjohnwu.magisk.core.Info
-import com.topjohnwu.magisk.core.model.module.LocalModule
-import com.topjohnwu.magisk.databinding.DiffItem
-import com.topjohnwu.magisk.databinding.ItemWrapper
-import com.topjohnwu.magisk.databinding.ObservableRvItem
-import com.topjohnwu.magisk.databinding.RvItem
-import com.topjohnwu.magisk.databinding.set
-import com.topjohnwu.magisk.utils.TextHolder
-import com.topjohnwu.magisk.utils.asText
-import com.topjohnwu.magisk.core.R as CoreR
+import com.kpfc.magisk.BR
+import com.kpfc.magisk.R
+import com.kpfc.magisk.core.Info
+import com.kpfc.magisk.core.model.module.LocalModule
+import com.kpfc.magisk.databinding.DiffItem
+import com.kpfc.magisk.databinding.ItemWrapper
+import com.kpfc.magisk.databinding.ObservableRvItem
+import com.kpfc.magisk.databinding.RvItem
+import com.kpfc.magisk.databinding.set
+import com.kpfc.magisk.utils.TextHolder
+import com.kpfc.magisk.utils.asText
+import com.kpfc.magisk.core.R as CoreR
 
 object InstallModule : RvItem(), DiffItem<InstallModule> {
     override val layoutRes = R.layout.item_module_download

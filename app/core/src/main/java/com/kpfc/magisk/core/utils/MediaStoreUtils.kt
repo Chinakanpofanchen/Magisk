@@ -10,8 +10,8 @@ import android.provider.OpenableColumns
 import androidx.annotation.RequiresApi
 import androidx.core.net.toFile
 import androidx.core.net.toUri
-import com.topjohnwu.magisk.core.AppContext
-import com.topjohnwu.magisk.core.Config
+import com.kpfc.magisk.core.AppContext
+import com.kpfc.magisk.core.Config
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException

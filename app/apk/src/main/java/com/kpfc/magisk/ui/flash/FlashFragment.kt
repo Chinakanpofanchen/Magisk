@@ -13,15 +13,15 @@ import android.view.View
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.navigation.NavDeepLinkBuilder
-import com.topjohnwu.magisk.MainDirections
-import com.topjohnwu.magisk.R
-import com.topjohnwu.magisk.arch.BaseFragment
-import com.topjohnwu.magisk.arch.viewModel
-import com.topjohnwu.magisk.core.Const
-import com.topjohnwu.magisk.core.cmp
-import com.topjohnwu.magisk.databinding.FragmentFlashMd2Binding
-import com.topjohnwu.magisk.ui.MainActivity
-import com.topjohnwu.magisk.core.R as CoreR
+import com.kpfc.magisk.MainDirections
+import com.kpfc.magisk.R
+import com.kpfc.magisk.arch.BaseFragment
+import com.kpfc.magisk.arch.viewModel
+import com.kpfc.magisk.core.Const
+import com.kpfc.magisk.core.cmp
+import com.kpfc.magisk.databinding.FragmentFlashMd2Binding
+import com.kpfc.magisk.ui.MainActivity
+import com.kpfc.magisk.core.R as CoreR
 
 class FlashFragment : BaseFragment<FragmentFlashMd2Binding>(), MenuProvider {
 

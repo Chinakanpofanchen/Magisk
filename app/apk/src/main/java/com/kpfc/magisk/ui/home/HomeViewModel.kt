@@ -6,31 +6,31 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.databinding.Bindable
-import com.topjohnwu.magisk.BR
-import com.topjohnwu.magisk.R
-import com.topjohnwu.magisk.arch.ActivityExecutor
-import com.topjohnwu.magisk.arch.AsyncLoadViewModel
-import com.topjohnwu.magisk.arch.ContextExecutor
-import com.topjohnwu.magisk.arch.UIActivity
-import com.topjohnwu.magisk.arch.ViewEvent
-import com.topjohnwu.magisk.core.BuildConfig
-import com.topjohnwu.magisk.core.Config
-import com.topjohnwu.magisk.core.Info
-import com.topjohnwu.magisk.core.download.Subject
-import com.topjohnwu.magisk.core.download.Subject.App
-import com.topjohnwu.magisk.core.ktx.await
-import com.topjohnwu.magisk.core.ktx.toast
-import com.topjohnwu.magisk.core.repository.NetworkService
-import com.topjohnwu.magisk.databinding.bindExtra
-import com.topjohnwu.magisk.databinding.set
-import com.topjohnwu.magisk.dialog.EnvFixDialog
-import com.topjohnwu.magisk.dialog.ManagerInstallDialog
-import com.topjohnwu.magisk.dialog.UninstallDialog
-import com.topjohnwu.magisk.events.SnackbarEvent
-import com.topjohnwu.magisk.utils.asText
+import com.kpfc.magisk.BR
+import com.kpfc.magisk.R
+import com.kpfc.magisk.arch.ActivityExecutor
+import com.kpfc.magisk.arch.AsyncLoadViewModel
+import com.kpfc.magisk.arch.ContextExecutor
+import com.kpfc.magisk.arch.UIActivity
+import com.kpfc.magisk.arch.ViewEvent
+import com.kpfc.magisk.core.BuildConfig
+import com.kpfc.magisk.core.Config
+import com.kpfc.magisk.core.Info
+import com.kpfc.magisk.core.download.Subject
+import com.kpfc.magisk.core.download.Subject.App
+import com.kpfc.magisk.core.ktx.await
+import com.kpfc.magisk.core.ktx.toast
+import com.kpfc.magisk.core.repository.NetworkService
+import com.kpfc.magisk.databinding.bindExtra
+import com.kpfc.magisk.databinding.set
+import com.kpfc.magisk.dialog.EnvFixDialog
+import com.kpfc.magisk.dialog.ManagerInstallDialog
+import com.kpfc.magisk.dialog.UninstallDialog
+import com.kpfc.magisk.events.SnackbarEvent
+import com.kpfc.magisk.utils.asText
 import com.topjohnwu.superuser.Shell
 import kotlin.math.roundToInt
-import com.topjohnwu.magisk.core.R as CoreR
+import com.kpfc.magisk.core.R as CoreR
 
 class HomeViewModel(
     private val svc: NetworkService

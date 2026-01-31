@@ -3,11 +3,11 @@ package com.kpfc.magisk.core.su
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import com.topjohnwu.magisk.core.BuildConfig
-import com.topjohnwu.magisk.core.Config
-import com.topjohnwu.magisk.core.data.magiskdb.PolicyDao
-import com.topjohnwu.magisk.core.ktx.getPackageInfo
-import com.topjohnwu.magisk.core.model.su.SuPolicy
+import com.kpfc.magisk.core.BuildConfig
+import com.kpfc.magisk.core.Config
+import com.kpfc.magisk.core.data.magiskdb.PolicyDao
+import com.kpfc.magisk.core.ktx.getPackageInfo
+import com.kpfc.magisk.core.model.su.SuPolicy
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

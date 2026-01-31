@@ -15,11 +15,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts.GetContent
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
-import com.topjohnwu.magisk.core.R
-import com.topjohnwu.magisk.core.ktx.reflectField
-import com.topjohnwu.magisk.core.ktx.toast
-import com.topjohnwu.magisk.core.utils.RequestAuthentication
-import com.topjohnwu.magisk.core.utils.RequestInstall
+import com.kpfc.magisk.core.R
+import com.kpfc.magisk.core.ktx.reflectField
+import com.kpfc.magisk.core.ktx.toast
+import com.kpfc.magisk.core.utils.RequestAuthentication
+import com.kpfc.magisk.core.utils.RequestInstall
 
 interface ContentResultCallback: ActivityResultCallback<Uri>, Parcelable {
     fun onActivityLaunch() {}

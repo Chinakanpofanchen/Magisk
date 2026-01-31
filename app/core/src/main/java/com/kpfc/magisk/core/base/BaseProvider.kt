@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.pm.ProviderInfo
 import android.database.Cursor
 import android.net.Uri
-import com.topjohnwu.magisk.core.patch
+import com.kpfc.magisk.core.patch
 
 open class BaseProvider : ContentProvider() {
     override fun attachInfo(context: Context, info: ProviderInfo) {

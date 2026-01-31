@@ -3,11 +3,11 @@ package com.kpfc.magisk.ui.log
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textview.MaterialTextView
-import com.topjohnwu.magisk.R
-import com.topjohnwu.magisk.databinding.DiffItem
-import com.topjohnwu.magisk.databinding.ItemWrapper
-import com.topjohnwu.magisk.databinding.ObservableRvItem
-import com.topjohnwu.magisk.databinding.ViewAwareItem
+import com.kpfc.magisk.R
+import com.kpfc.magisk.databinding.DiffItem
+import com.kpfc.magisk.databinding.ItemWrapper
+import com.kpfc.magisk.databinding.ObservableRvItem
+import com.kpfc.magisk.databinding.ViewAwareItem
 
 class LogRvItem(
     override val item: String

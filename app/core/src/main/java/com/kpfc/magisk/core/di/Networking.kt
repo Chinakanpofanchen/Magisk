@@ -2,11 +2,11 @@ package com.kpfc.magisk.core.di
 
 import android.content.Context
 import com.squareup.moshi.Moshi
-import com.topjohnwu.magisk.ProviderInstaller
-import com.topjohnwu.magisk.core.BuildConfig
-import com.topjohnwu.magisk.core.Config
-import com.topjohnwu.magisk.core.model.DateTimeAdapter
-import com.topjohnwu.magisk.core.utils.LocaleSetting
+import com.kpfc.magisk.ProviderInstaller
+import com.kpfc.magisk.core.BuildConfig
+import com.kpfc.magisk.core.Config
+import com.kpfc.magisk.core.model.DateTimeAdapter
+import com.kpfc.magisk.core.utils.LocaleSetting
 import okhttp3.Cache
 import okhttp3.ConnectionSpec
 import okhttp3.Dns

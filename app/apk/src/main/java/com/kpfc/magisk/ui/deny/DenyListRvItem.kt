@@ -3,13 +3,13 @@ package com.kpfc.magisk.ui.deny
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.Bindable
-import com.topjohnwu.magisk.BR
-import com.topjohnwu.magisk.R
-import com.topjohnwu.magisk.arch.startAnimations
-import com.topjohnwu.magisk.databinding.DiffItem
-import com.topjohnwu.magisk.databinding.ObservableRvItem
-import com.topjohnwu.magisk.databinding.addOnPropertyChangedCallback
-import com.topjohnwu.magisk.databinding.set
+import com.kpfc.magisk.BR
+import com.kpfc.magisk.R
+import com.kpfc.magisk.arch.startAnimations
+import com.kpfc.magisk.databinding.DiffItem
+import com.kpfc.magisk.databinding.ObservableRvItem
+import com.kpfc.magisk.databinding.addOnPropertyChangedCallback
+import com.kpfc.magisk.databinding.set
 import com.topjohnwu.superuser.Shell
 import kotlin.math.roundToInt
 

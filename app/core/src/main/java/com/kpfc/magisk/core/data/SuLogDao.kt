@@ -7,7 +7,7 @@ import androidx.room.Query
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.topjohnwu.magisk.core.model.su.SuLog
+import com.kpfc.magisk.core.model.su.SuLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Calendar

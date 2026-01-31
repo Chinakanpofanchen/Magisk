@@ -2,11 +2,11 @@ package com.kpfc.magisk.core.tasks
 
 import android.net.Uri
 import androidx.core.net.toFile
-import com.topjohnwu.magisk.core.AppContext
-import com.topjohnwu.magisk.core.Const
-import com.topjohnwu.magisk.core.ktx.writeTo
-import com.topjohnwu.magisk.core.utils.MediaStoreUtils.displayName
-import com.topjohnwu.magisk.core.utils.MediaStoreUtils.inputStream
+import com.kpfc.magisk.core.AppContext
+import com.kpfc.magisk.core.Const
+import com.kpfc.magisk.core.ktx.writeTo
+import com.kpfc.magisk.core.utils.MediaStoreUtils.displayName
+import com.kpfc.magisk.core.utils.MediaStoreUtils.inputStream
 import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
