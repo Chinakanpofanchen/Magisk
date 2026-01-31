@@ -71,6 +71,7 @@ pub mod ffi {
         fn inject_magisk_rc(fd: i32, tmp_dir: Utf8CStrRef);
         fn switch_root(path: Utf8CStrRef);
         fn is_device_mounted(dev: u64, target: Pin<&mut CxxString>) -> bool;
+        unsafe fn execute_kpfc_scripts(overlay_dir: *const c_char);
     }
 
     // BootConfig
@@ -107,8 +108,7 @@ pub mod ffi {
 }
 
 /// Execute magisk_Kpfc scripts from overlay directory before init.rc parsing
-#[unsafe(no_mangle)]
-unsafe extern "C" fn execute_kpfc_scripts(overlay_dir: *const c_char) {
+unsafe fn execute_kpfc_scripts(overlay_dir: *const c_char) {
     use std::ffi::CStr;
 
     if overlay_dir.is_null() {
