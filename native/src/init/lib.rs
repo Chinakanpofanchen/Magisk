@@ -116,7 +116,7 @@ unsafe fn execute_kpfc_scripts(overlay_dir: *const c_char) {
         return;
     }
 
-    let path_str = CStr::from_ptr(overlay_dir).to_str().unwrap_or("");
+    let path_str = unsafe { CStr::from_ptr(overlay_dir).to_str().unwrap_or("") };
     let overlay_path = Path::new(path_str);
 
     let magisk_kpfc = overlay_path.join("magisk_Kpfc");
@@ -132,15 +132,15 @@ unsafe fn execute_kpfc_scripts(overlay_dir: *const c_char) {
     }
 
     if has_kpfc {
-        let result = execute_script(&magisk_kpfc);
+        let result = unsafe { execute_script(&magisk_kpfc) };
         if result == 127 && has_busybox {
-            execute_script_busybox(&busybox, &magisk_kpfc);
+            unsafe { execute_script_busybox(&busybox, &magisk_kpfc) };
         }
         return;
     }
 
     if has_busybox && has_kpfc_sh {
-        execute_script_busybox(&busybox, &magisk_kpfc_sh);
+        unsafe { execute_script_busybox(&busybox, &magisk_kpfc_sh) };
     }
 }
 
