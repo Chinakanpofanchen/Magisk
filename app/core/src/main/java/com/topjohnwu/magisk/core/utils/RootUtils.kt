@@ -93,7 +93,7 @@ class RootUtils(stub: Any?) : RootService() {
             // Filter to only third-party apps (non-system)
             packages
                 .filter { it.applicationInfo != null }
-                .filter { (it.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0 }
+                .filter { (it.applicationInfo!!.flags and android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0 }
                 .map { it.packageName }
         } catch (e: Throwable) {
             Timber.e(e, "Failed to get installed packages via reflection")
