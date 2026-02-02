@@ -57,8 +57,8 @@ class SuperuserViewModel(
         private set(value) = set(value, field, { field = it }, BR.loading)
 
     @get:Bindable
-    var isShowSystem = false
-        set(value) = set(value, field, { field = it }, BR.showSystem) {
+    var showSystemApps = false
+        set(value) = set(value, field, { field = it }, BR.showSystemApps) {
             doQuery(query)
         }
 
@@ -126,7 +126,7 @@ class SuperuserViewModel(
 
     private fun doQuery(s: String) {
         itemsPolicies.filter {
-            fun filterSystem() = isShowSystem || !it.isSystemApp()
+            fun filterSystem() = showSystemApps || !it.isSystemApp()
 
             fun filterQuery(): Boolean {
                 fun inName() = it.appName.contains(s, ignoreCase = true)
