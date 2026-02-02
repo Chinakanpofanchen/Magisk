@@ -59,8 +59,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Open Settings"
-                    android:onClick="@{() -> viewModel.requestPermission()}"
-                    app:icon="@drawable/ic_info_md2" />
+                    android:onClick="@{() -> viewModel.requestPermission()}" />
 
             </LinearLayout>
 
