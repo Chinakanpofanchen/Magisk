@@ -89,11 +89,11 @@ class SuperuserViewModel(
 
             // Create PolicyRvItem for each app
             val policies = packages.toList().mapNotNull { appInfo ->
-                val packageName = appInfo.packageName
-
                 try {
+                    val packageName = appInfo.packageName
                     val info: android.content.pm.PackageInfo = pm.getPackageInfo(packageName, MATCH_UNINSTALLED_PACKAGES)
-                    val uid = info.applicationInfo.uid
+                    val applicationInfo = info.applicationInfo ?: return@mapNotNull null
+                    val uid = applicationInfo.uid
 
                     // Skip self
                     if (uid == AppContext.applicationInfo.uid) return@mapNotNull null
@@ -109,8 +109,8 @@ class SuperuserViewModel(
                         this@SuperuserViewModel, policy,
                         info.packageName,
                         info.sharedUserId != null,
-                        info.applicationInfo?.loadIcon(pm) ?: pm.defaultActivityIcon,
-                        info.applicationInfo?.getLabel(pm) ?: info.packageName
+                        applicationInfo.loadIcon(pm),
+                        applicationInfo.getLabel(pm) ?: packageName
                     )
                 } catch (e: PackageManager.NameNotFoundException) {
                     null
