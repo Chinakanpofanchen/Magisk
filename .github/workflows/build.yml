@@ -29,9 +29,6 @@ jobs:
         with:
           is-asset-build: true
 
-      - name: Build magiskinit only
-        run: ./build.py -vr magiskinit
-
       - name: Build APK
         run: ./build.py -vr app
 
