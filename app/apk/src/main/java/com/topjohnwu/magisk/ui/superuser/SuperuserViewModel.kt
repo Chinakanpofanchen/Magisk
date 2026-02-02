@@ -86,21 +86,25 @@ class SuperuserViewModel(
             val pm = AppContext.packageManager
             val packages = pm.getInstalledApplications(MATCH_UNINSTALLED_PACKAGES)
                 .asFlow()
-                .filter { it.uid != AppContext.applicationInfo.uid }
 
             // Create PolicyRvItem for each app
             val policies = packages.toList().mapNotNull { appInfo ->
                 val packageName = appInfo.packageName
 
-                // Check if there's an existing policy for this UID
-                val existingPolicy = policyMap[appInfo.uid]
-                val policy = existingPolicy ?: SuPolicy(
-                    uid = appInfo.uid,
-                    policy = SuPolicy.QUERY
-                )
-
                 try {
                     val info: android.content.pm.PackageInfo = pm.getPackageInfo(packageName, MATCH_UNINSTALLED_PACKAGES)
+                    val uid = info.applicationInfo.uid
+
+                    // Skip self
+                    if (uid == AppContext.applicationInfo.uid) return@mapNotNull null
+
+                    // Check if there's an existing policy for this UID
+                    val existingPolicy = policyMap[uid]
+                    val policy = existingPolicy ?: SuPolicy(
+                        uid = uid,
+                        policy = SuPolicy.QUERY
+                    )
+
                     PolicyRvItem(
                         this@SuperuserViewModel, policy,
                         info.packageName,
