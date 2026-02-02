@@ -26,7 +26,6 @@ class PolicyRvItem(
 
     val title get() = if (isSharedUid) "[SharedUID] $appName" else appName
 
-    @get:Bindable
     val statusText: String
         get() = when (item.policy) {
             SuPolicy.ALLOW -> AppContext.getString(CoreR.string.superuser_status_authorized)
