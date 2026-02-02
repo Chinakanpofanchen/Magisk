@@ -58,12 +58,6 @@ class SuperuserViewModel(
         private set(value) = set(value, field, { field = it }, BR.loading)
 
     @get:Bindable
-    var showSystemApps = false
-        set(value) = set(value, field, { field = it }, BR.showSystemApps) {
-            doQuery(query)
-        }
-
-    @get:Bindable
     var query = ""
         set(value) = set(value, field, { field = it }, BR.query) {
             doQuery(value)
@@ -80,27 +74,23 @@ class SuperuserViewModel(
             db.deleteOutdated()
             db.delete(AppContext.applicationInfo.uid)
 
-            // Build a map of existing policies by UID
+            // Fetch all authorization records from database
             val policyMap = db.fetchAll().associateBy { it.uid }
-
-            // Get all installed applications
             val pm = AppContext.packageManager
-            val policies = pm.getInstalledApplications(MATCH_UNINSTALLED_PACKAGES)
+
+            // Get all third-party apps
+            val policyItems = pm.getInstalledApplications(MATCH_UNINSTALLED_PACKAGES)
                 .asFlow()
+                .filter { (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0 }
                 .mapNotNull { appInfo ->
                     try {
                         val packageName = appInfo.packageName
                         val info: android.content.pm.PackageInfo = pm.getPackageInfo(packageName, MATCH_UNINSTALLED_PACKAGES)
                         val applicationInfo = info.applicationInfo ?: return@mapNotNull null
-                        val uid = applicationInfo.uid
 
-                        // Skip self
-                        if (uid == AppContext.applicationInfo.uid) return@mapNotNull null
-
-                        // Check if there's an existing policy for this UID
-                        val existingPolicy = policyMap[uid]
-                        val policy = existingPolicy ?: SuPolicy(
-                            uid = uid,
+                        // Get existing policy or create new one with QUERY status
+                        val policy = policyMap[applicationInfo.uid] ?: SuPolicy(
+                            uid = applicationInfo.uid,
                             policy = SuPolicy.QUERY
                         )
 
@@ -116,12 +106,14 @@ class SuperuserViewModel(
                     }
                 }.toCollection(ArrayList<PolicyRvItem>())
 
-            // Sort by app name
-            policies.sortWith(compareBy(
+            // Sort: ALLOW apps first, DENY/QUERY apps after, then by app name
+            policyItems.sortWith(compareBy(
+                { it.item.policy == SuPolicy.QUERY },  // QUERY last
+                { it.item.policy != SuPolicy.ALLOW },  // ALLOW first
                 { it.appName.lowercase(Locale.ROOT) },
                 { it.packageName }
             ))
-            itemsPolicies.set(policies)
+            itemsPolicies.set(policyItems)
         }
         doQuery(query)
         loading = false
@@ -129,25 +121,9 @@ class SuperuserViewModel(
 
     private fun doQuery(s: String) {
         itemsPolicies.filter {
-            fun filterSystem() = showSystemApps || !it.isSystemApp()
-
-            fun filterQuery(): Boolean {
-                fun inName() = it.appName.contains(s, ignoreCase = true)
-                fun inPackage() = it.packageName.contains(s, ignoreCase = true)
-                return inName() || inPackage()
-            }
-
-            filterSystem() && filterQuery()
-        }
-    }
-
-    private fun PolicyRvItem.isSystemApp(): Boolean {
-        return try {
-            val pm = AppContext.packageManager
-            val info = pm.getApplicationInfo(packageName, 0)
-            (info.flags and ApplicationInfo.FLAG_SYSTEM) != 0
-        } catch (e: PackageManager.NameNotFoundException) {
-            false
+            fun inName() = it.appName.contains(s, ignoreCase = true)
+            fun inPackage() = it.packageName.contains(s, ignoreCase = true)
+            inName() || inPackage()
         }
     }
 
@@ -191,10 +167,18 @@ class SuperuserViewModel(
     fun updatePolicy(item: PolicyRvItem, policy: Int) {
         fun updateState() {
             viewModelScope.launch {
-                val res = if (policy >= SuPolicy.ALLOW) R.string.su_snack_grant else R.string.su_snack_deny
-                item.item.policy = policy
-                db.update(item.item)
-                SnackbarEvent(res.asText(item.appName)).publish()
+                if (policy >= SuPolicy.ALLOW) {
+                    // Grant: update or create policy
+                    item.item.policy = policy
+                    db.update(item.item)
+                    SnackbarEvent(R.string.su_snack_grant.asText(item.appName)).publish()
+                } else {
+                    // Deny: delete the policy completely
+                    db.delete(item.item.uid)
+                    SnackbarEvent(R.string.su_snack_deny.asText(item.appName)).publish()
+                    // Reload to show updated list
+                    doLoadWork()
+                }
             }
         }
 
