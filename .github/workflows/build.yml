@@ -15,7 +15,6 @@ on:
 jobs:
   build:
     name: Build Magisk artifacts
-    runs-on: macos-latest
     strategy:
       fail-fast: false
     steps:
