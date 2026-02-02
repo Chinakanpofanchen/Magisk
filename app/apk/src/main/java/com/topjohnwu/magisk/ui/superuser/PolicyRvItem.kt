@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable
 import androidx.databinding.Bindable
 import com.topjohnwu.magisk.BR
 import com.topjohnwu.magisk.R
+import com.topjohnwu.magisk.core.AppContext
 import com.topjohnwu.magisk.core.Config
 import com.topjohnwu.magisk.core.model.su.SuPolicy
 import com.topjohnwu.magisk.databinding.DiffItem
@@ -24,6 +25,15 @@ class PolicyRvItem(
     override val layoutRes = R.layout.item_policy_md2
 
     val title get() = if (isSharedUid) "[SharedUID] $appName" else appName
+
+    @get:Bindable
+    val statusText: String
+        get() = when (item.policy) {
+            SuPolicy.ALLOW -> AppContext.getString(CoreR.string.superuser_status_authorized)
+            SuPolicy.DENY -> AppContext.getString(CoreR.string.superuser_status_denied)
+            SuPolicy.RESTRICT -> AppContext.getString(CoreR.string.superuser_status_restricted)
+            else -> AppContext.getString(CoreR.string.superuser_status_not_set)
+        }
 
     private inline fun <reified T> setImpl(new: T, old: T, setter: (T) -> Unit) {
         if (old != new) {
