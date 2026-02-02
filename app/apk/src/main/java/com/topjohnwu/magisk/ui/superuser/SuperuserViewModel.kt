@@ -100,7 +100,7 @@ class SuperuserViewModel(
                 )
 
                 try {
-                    val info = pm.getPackageInfo(packageName, MATCH_UNINSTALLED_PACKAGES)
+                    val info: android.content.pm.PackageInfo = pm.getPackageInfo(packageName, MATCH_UNINSTALLED_PACKAGES)
                     PolicyRvItem(
                         this@SuperuserViewModel, policy,
                         info.packageName,
