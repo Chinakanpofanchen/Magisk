@@ -111,7 +111,7 @@ class SuperuserViewModel(
                 } catch (e: PackageManager.NameNotFoundException) {
                     null
                 }
-            }.toCollection(ArrayList())
+            }.toCollection(ArrayList<PolicyRvItem>())
 
             // Sort by app name
             policies.sortWith(compareBy(
