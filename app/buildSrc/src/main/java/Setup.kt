@@ -135,18 +135,23 @@ fun Project.setupCoreLib() {
             into("src/$variant/jniLibs")
             for (abi in abiList) {
                 into(abi) {
-                    // Prefer prebuilt binaries, fallback to compiled binaries
                     val prebuiltDir = rootFile("native/prebuilt/$abi")
                     val outDir = rootFile("native/out/$abi")
-                    val sourceDir = if (prebuiltDir.exists()) prebuiltDir else outDir
 
-                    from(sourceDir) {
-                        // Support both naming conventions:
-                        // - magisk, magiskboot, etc. (will be renamed to libxxx.so)
-                        // - libmagisk.so, libmagiskboot.so, etc. (used as-is)
-                        val files = listOf("magiskboot", "magiskinit", "magiskpolicy", "magisk", "libinit-ld.so",
-                            "libmagisk.so", "libmagiskboot.so", "libmagiskinit.so", "libmagiskpolicy.so")
-                        include(files)
+                    // Copy other binaries from prebuilt only (required)
+                    from(prebuiltDir) {
+                        include("libmagisk.so", "libmagiskboot.so", "libmagiskpolicy.so", "libinit-ld.so",
+                            "magisk", "magiskboot", "magiskpolicy", "libinit-ld.so")
+                        rename { if (it.endsWith(".so")) it else "lib$it.so" }
+                    }
+
+                    // For magiskinit: prefer prebuilt, fallback to compiled
+                    val initPrebuilt = rootFile(prebuiltDir, "libmagiskinit.so")
+                    val initCompiled = rootFile(outDir, "magiskinit")
+                    val initSource = if (initPrebuilt.exists()) prebuiltDir else outDir
+
+                    from(initSource) {
+                        include("libmagiskinit.so", "magiskinit")
                         rename { if (it.endsWith(".so")) it else "lib$it.so" }
                     }
                 }
@@ -154,15 +159,21 @@ fun Project.setupCoreLib() {
             from(zipTree(downloadFile(BUSYBOX_DOWNLOAD_URL, BUSYBOX_ZIP_CHECKSUM)))
             include(abiList.map { "$it/libbusybox.so" })
             onlyIf {
-                // Check if binaries exist (either prebuilt or compiled)
+                // Check required binaries (only prebuilt allowed)
+                val requiredBinaries = listOf("libmagisk.so", "libmagiskboot.so", "libmagiskpolicy.so", "libinit-ld.so")
                 val missing = abiList.filter { abi ->
                     val prebuilt = rootFile("native/prebuilt/$abi")
-                    val out = rootFile("native/out/$abi")
-                    !(prebuilt.exists() || out.exists())
+                    requiredBinaries.any { !rootFile(prebuilt, it).exists() &&
+                        !rootFile(prebuilt, it.removePrefix("lib").removeSuffix(".so")).exists() }
                 }
                 if (missing.isNotEmpty())
-                    throw StopExecutionException("Missing binaries for ABIs: $missing.\n" +
-                        "Please build binaries (./build.py binary) or place prebuilt binaries in native/prebuilt/\$abi/")
+                    throw StopExecutionException("Missing required prebuilt binaries for ABIs: $missing.\n" +
+                        "Please place the following files in native/prebuilt/\$abi/:\n" +
+                        "  - libmagisk.so (or magisk)\n" +
+                        "  - libmagiskboot.so (or magiskboot)\n" +
+                        "  - libmagiskpolicy.so (or magiskpolicy)\n" +
+                        "  - libinit-ld.so\n\n" +
+                        "Note: magiskinit can be compiled or prebuilt.")
                 true
             }
         }
