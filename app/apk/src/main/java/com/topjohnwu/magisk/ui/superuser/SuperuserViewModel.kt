@@ -30,6 +30,7 @@ import com.topjohnwu.magisk.view.TextItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.toCollection
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -84,38 +85,36 @@ class SuperuserViewModel(
 
             // Get all installed applications
             val pm = AppContext.packageManager
-            val packages = pm.getInstalledApplications(MATCH_UNINSTALLED_PACKAGES)
+            val policies = pm.getInstalledApplications(MATCH_UNINSTALLED_PACKAGES)
                 .asFlow()
+                .mapNotNull { appInfo ->
+                    try {
+                        val packageName = appInfo.packageName
+                        val info: android.content.pm.PackageInfo = pm.getPackageInfo(packageName, MATCH_UNINSTALLED_PACKAGES)
+                        val applicationInfo = info.applicationInfo ?: return@mapNotNull null
+                        val uid = applicationInfo.uid
 
-            // Create PolicyRvItem for each app
-            val policies = packages.toList().mapNotNull { appInfo ->
-                try {
-                    val packageName = appInfo.packageName
-                    val info: android.content.pm.PackageInfo = pm.getPackageInfo(packageName, MATCH_UNINSTALLED_PACKAGES)
-                    val applicationInfo = info.applicationInfo ?: return@mapNotNull null
-                    val uid = applicationInfo.uid
+                        // Skip self
+                        if (uid == AppContext.applicationInfo.uid) return@mapNotNull null
 
-                    // Skip self
-                    if (uid == AppContext.applicationInfo.uid) return@mapNotNull null
+                        // Check if there's an existing policy for this UID
+                        val existingPolicy = policyMap[uid]
+                        val policy = existingPolicy ?: SuPolicy(
+                            uid = uid,
+                            policy = SuPolicy.QUERY
+                        )
 
-                    // Check if there's an existing policy for this UID
-                    val existingPolicy = policyMap[uid]
-                    val policy = existingPolicy ?: SuPolicy(
-                        uid = uid,
-                        policy = SuPolicy.QUERY
-                    )
-
-                    PolicyRvItem(
-                        this@SuperuserViewModel, policy,
-                        info.packageName,
-                        info.sharedUserId != null,
-                        applicationInfo.loadIcon(pm),
-                        applicationInfo.getLabel(pm) ?: packageName
-                    )
-                } catch (e: PackageManager.NameNotFoundException) {
-                    null
-                }
-            }.toCollection(ArrayList<PolicyRvItem>())
+                        PolicyRvItem(
+                            this@SuperuserViewModel, policy,
+                            info.packageName,
+                            info.sharedUserId != null,
+                            applicationInfo.loadIcon(pm),
+                            applicationInfo.getLabel(pm) ?: packageName
+                        )
+                    } catch (e: PackageManager.NameNotFoundException) {
+                        null
+                    }
+                }.toCollection(ArrayList<PolicyRvItem>())
 
             // Sort by app name
             policies.sortWith(compareBy(
