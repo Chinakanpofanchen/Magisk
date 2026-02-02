@@ -89,7 +89,7 @@ class SuperuserViewModel(
                 .filter { it.uid != AppContext.applicationInfo.uid }
 
             // Create PolicyRvItem for each app
-            val policies = packages.mapNotNull { appInfo ->
+            val policies = packages.toList().mapNotNull { appInfo ->
                 val packageName = appInfo.packageName
 
                 // Check if there's an existing policy for this UID
