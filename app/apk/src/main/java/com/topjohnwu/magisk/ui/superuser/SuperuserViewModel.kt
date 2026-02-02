@@ -16,6 +16,8 @@ import androidx.lifecycle.viewModelScope
 import com.topjohnwu.magisk.BR
 import com.topjohnwu.magisk.arch.AsyncLoadViewModel
 import com.topjohnwu.magisk.core.AppContext
+import com.topjohnwu.magisk.core.Info
+import com.topjohnwu.magisk.core.utils.RootUtils
 import com.topjohnwu.magisk.core.Config
 import com.topjohnwu.magisk.core.Info
 import com.topjohnwu.magisk.core.R
@@ -78,16 +80,6 @@ class SuperuserViewModel(
             return
         }
 
-        // Check QUERY_ALL_PACKAGES permission on Android 11+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val granted = AppContext.checkSelfPermission(Manifest.permission.QUERY_ALL_PACKAGES) == PackageManager.PERMISSION_GRANTED
-            if (!granted) {
-                permissionRequired = true
-                loading = false
-                return
-            }
-        }
-
         permissionRequired = false
         loading = true
         withContext(Dispatchers.IO) {
@@ -98,9 +90,38 @@ class SuperuserViewModel(
             val policyMap = db.fetchAll().associateBy { it.uid }
             val pm = AppContext.packageManager
 
+            // Try to get package list via root service first (if available and rooted)
+            val packageNames = if (Info.isRooted) {
+                try {
+                    RootUtils.getInstalledPackages()
+                } catch (e: Exception) {
+                    // Fall back to standard method if root method fails
+                    null
+                }
+            } else null
+
             // Get all third-party apps
-            val policyItems = pm.getInstalledApplications(MATCH_UNINSTALLED_PACKAGES)
-                .asFlow()
+            val policyItems = if (packageNames != null) {
+                // Use root method result - convert package names to ApplicationInfo
+                packageNames.asFlow().mapNotNull { packageName ->
+                    try {
+                        pm.getApplicationInfo(packageName, MATCH_UNINSTALLED_PACKAGES)
+                    } catch (e: PackageManager.NameNotFoundException) {
+                        null
+                    }
+                }
+            } else {
+                // Fall back to standard method and check permission
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    val granted = AppContext.checkSelfPermission(Manifest.permission.QUERY_ALL_PACKAGES) == PackageManager.PERMISSION_GRANTED
+                    if (!granted) {
+                        permissionRequired = true
+                        loading = false
+                        return@withContext
+                    }
+                }
+                pm.getInstalledApplications(MATCH_UNINSTALLED_PACKAGES).asFlow()
+            }
                 .filter { (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0 }
                 .mapNotNull { appInfo ->
                     try {

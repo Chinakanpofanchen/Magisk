@@ -47,6 +47,7 @@ class RootUtils(stub: Any?) : RootService() {
             override fun getAppProcess(pid: Int) = safe(null) { getAppProcessImpl(pid) }
             override fun getFileSystem(): IBinder = FileSystemManager.getService()
             override fun addSystemlessHosts() = safe(false) { addSystemlessHostsImpl() }
+            override fun getInstalledPackages(): List<String> = safe(emptyList()) { getInstalledPackagesImpl() }
         }
     }
 
@@ -70,6 +71,27 @@ class RootUtils(stub: Any?) : RootService() {
             }
         }
         return null
+    }
+
+    private fun getInstalledPackagesImpl(): List<String> {
+        val pm = packageManager
+        val userId = android.os.Process.myUserHandle().hashCode()
+
+        // Use reflection to call hidden API getInstalledPackagesAsUser
+        val method = pm.javaClass.getDeclaredMethod(
+            "getInstalledPackagesAsUser",
+            Int::class.javaPrimitiveType,
+            Int::class.javaPrimitiveType
+        )
+        val flags = android.content.pm.PackageManager.MATCH_UNINSTALLED_PACKAGES
+        @Suppress("UNCHECKED_CAST")
+        val packages = method.invoke(pm, flags, userId) as List<android.content.pm.PackageInfo>
+
+        // Filter to only third-party apps (non-system)
+        return packages
+            .filter { it.applicationInfo != null }
+            .filter { (it.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0 }
+            .map { it.packageName }
     }
 
     private fun addSystemlessHostsImpl(): Boolean {
@@ -152,6 +174,8 @@ class RootUtils(stub: Any?) : RootService() {
             }
 
         fun getAppProcess(pid: Int) = safe(null) { obj?.getAppProcess(pid) }
+
+        fun getInstalledPackages(): List<String> = safe(emptyList()) { obj?.getInstalledPackages() ?: emptyList() }
 
         suspend fun addSystemlessHosts() =
             withContext(Dispatchers.IO) { safe(false) { obj?.addSystemlessHosts() ?: false } }
