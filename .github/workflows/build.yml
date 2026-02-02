@@ -29,8 +29,8 @@ jobs:
         with:
           is-asset-build: true
 
-      - name: Build APK
-        run: ./build.py -vr app
+      - name: Build all
+        run: ./build.py -vr all
 
       - name: Stop gradle daemon
         run: ./app/gradlew --stop
