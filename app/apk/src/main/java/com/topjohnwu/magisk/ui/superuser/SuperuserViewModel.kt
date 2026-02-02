@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.content.pm.PackageManager.MATCH_UNINSTALLED_PACKAGES
 import android.os.Process
 import androidx.databinding.Bindable
+import androidx.databinding.ObservableArrayList
 import androidx.lifecycle.viewModelScope
 import com.topjohnwu.magisk.BR
 import com.topjohnwu.magisk.arch.AsyncLoadViewModel
