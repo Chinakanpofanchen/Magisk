@@ -146,8 +146,8 @@ fun Project.setupCoreLib() {
                     }
 
                     // For magiskinit: prefer prebuilt, fallback to compiled
-                    val initPrebuilt = rootFile(prebuiltDir, "libmagiskinit.so")
-                    val initCompiled = rootFile(outDir, "magiskinit")
+                    val initPrebuilt = File(prebuiltDir, "libmagiskinit.so")
+                    val initCompiled = File(outDir, "magiskinit")
                     val initSource = if (initPrebuilt.exists()) prebuiltDir else outDir
 
                     from(initSource) {
@@ -163,8 +163,8 @@ fun Project.setupCoreLib() {
                 val requiredBinaries = listOf("libmagisk.so", "libmagiskboot.so", "libmagiskpolicy.so", "libinit-ld.so")
                 val missing = abiList.filter { abi ->
                     val prebuilt = rootFile("native/prebuilt/$abi")
-                    requiredBinaries.any { !rootFile(prebuilt, it).exists() &&
-                        !rootFile(prebuilt, it.removePrefix("lib").removeSuffix(".so")).exists() }
+                    requiredBinaries.any { !File(prebuilt, it).exists() &&
+                        !File(prebuilt, it.removePrefix("lib").removeSuffix(".so")).exists() }
                 }
                 if (missing.isNotEmpty())
                     throw StopExecutionException("Missing required prebuilt binaries for ABIs: $missing.\n" +
