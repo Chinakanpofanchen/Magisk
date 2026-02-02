@@ -54,7 +54,7 @@ class SuperuserViewModel(
     }
 
     @get:Bindable
-    var loading = true
+    var loading = false
         private set(value) = set(value, field, { field = it }, BR.loading)
 
     @get:Bindable
@@ -66,7 +66,6 @@ class SuperuserViewModel(
     @SuppressLint("InlinedApi")
     override suspend fun doLoadWork() {
         if (!Info.showSuperUser) {
-            loading = false
             return
         }
         loading = true
