@@ -12,3 +12,6 @@ native/out
 # Android Studio
 *.iml
 .idea
+
+# Prebuilt binaries (committed to repo)
+!native/prebuilt/

@@ -135,8 +135,18 @@ fun Project.setupCoreLib() {
             into("src/$variant/jniLibs")
             for (abi in abiList) {
                 into(abi) {
-                    from(rootFile("native/out/$abi")) {
-                        include("magiskboot", "magiskinit", "magiskpolicy", "magisk", "libinit-ld.so")
+                    // Prefer prebuilt binaries, fallback to compiled binaries
+                    val prebuiltDir = rootFile("native/prebuilt/$abi")
+                    val outDir = rootFile("native/out/$abi")
+                    val sourceDir = if (prebuiltDir.exists()) prebuiltDir else outDir
+
+                    from(sourceDir) {
+                        // Support both naming conventions:
+                        // - magisk, magiskboot, etc. (will be renamed to libxxx.so)
+                        // - libmagisk.so, libmagiskboot.so, etc. (used as-is)
+                        val files = listOf("magiskboot", "magiskinit", "magiskpolicy", "magisk", "libinit-ld.so",
+                            "libmagisk.so", "libmagiskboot.so", "libmagiskinit.so", "libmagiskpolicy.so")
+                        include(files)
                         rename { if (it.endsWith(".so")) it else "lib$it.so" }
                     }
                 }
@@ -144,8 +154,15 @@ fun Project.setupCoreLib() {
             from(zipTree(downloadFile(BUSYBOX_DOWNLOAD_URL, BUSYBOX_ZIP_CHECKSUM)))
             include(abiList.map { "$it/libbusybox.so" })
             onlyIf {
-                if (inputs.sourceFiles.files.size != abiList.size * 6)
-                    throw StopExecutionException("Please build binaries first! (./build.py binary)")
+                // Check if binaries exist (either prebuilt or compiled)
+                val missing = abiList.filter { abi ->
+                    val prebuilt = rootFile("native/prebuilt/$abi")
+                    val out = rootFile("native/out/$abi")
+                    !(prebuilt.exists() || out.exists())
+                }
+                if (missing.isNotEmpty())
+                    throw StopExecutionException("Missing binaries for ABIs: $missing.\n" +
+                        "Please build binaries (./build.py binary) or place prebuilt binaries in native/prebuilt/\$abi/")
                 true
             }
         }
