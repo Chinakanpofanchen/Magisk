@@ -55,15 +55,15 @@ class SuperuserViewModel(
     var loading = true
         private set(value) = set(value, field, { field = it }, BR.loading)
 
+    @get:Bindable
     var isShowSystem = false
-        set(value) {
-            field = value
+        set(value) = set(value, field, { field = it }, BR.isShowSystem) {
             doQuery(query)
         }
 
+    @get:Bindable
     var query = ""
-        set(value) {
-            field = value
+        set(value) = set(value, field, { field = it }, BR.query) {
             doQuery(value)
         }
 

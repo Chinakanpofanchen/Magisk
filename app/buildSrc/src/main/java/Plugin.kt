@@ -15,7 +15,7 @@ lateinit var RANDOM: Random
 private val props = Properties()
 private var commitHash = ""
 private val supportAbis = setOf("armeabi-v7a", "x86", "arm64-v8a", "x86_64", "riscv64")
-private val defaultAbis = setOf("armeabi-v7a", "x86", "arm64-v8a", "x86_64")
+private val defaultAbis = setOf("arm64-v8a")
 
 object Config {
     operator fun get(key: String): String? {
