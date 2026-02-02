@@ -38,31 +38,6 @@
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Permission Required -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="@dimen/l1"
-                goneUnless="@{viewModel.permissionRequired}">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Requires permission to view all apps"
-                    android:textAppearance="@style/AppearanceFoundation.Body"
-                    android:textAlignment="center"
-                    android:paddingBottom="@dimen/l1" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Open Settings"
-                    android:onClick="@{() -> viewModel.requestPermission()}" />
-
-            </LinearLayout>
-
             <!-- RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/superuser_list"

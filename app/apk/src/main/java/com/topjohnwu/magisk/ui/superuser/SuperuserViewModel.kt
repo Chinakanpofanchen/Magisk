@@ -1,15 +1,10 @@
 package com.topjohnwu.magisk.ui.superuser
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.MATCH_UNINSTALLED_PACKAGES
-import android.net.Uri
-import android.os.Build
 import android.os.Process
-import android.provider.Settings
 import androidx.databinding.Bindable
 import androidx.databinding.ObservableArrayList
 import androidx.lifecycle.viewModelScope
@@ -65,10 +60,6 @@ class SuperuserViewModel(
         private set(value) = set(value, field, { field = it }, BR.loading)
 
     @get:Bindable
-    var permissionRequired = false
-        private set(value) = set(value, field, { field = it }, BR.permissionRequired)
-
-    @get:Bindable
     var query = ""
         set(value) = set(value, field, { field = it }, BR.query) {
             doQuery(value)
@@ -80,7 +71,6 @@ class SuperuserViewModel(
             return
         }
 
-        permissionRequired = false
         loading = true
         withContext(Dispatchers.IO) {
             db.deleteOutdated()
@@ -111,15 +101,7 @@ class SuperuserViewModel(
                     }
                 }
             } else {
-                // Fall back to standard method and check permission
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    val granted = AppContext.checkSelfPermission(Manifest.permission.QUERY_ALL_PACKAGES) == PackageManager.PERMISSION_GRANTED
-                    if (!granted) {
-                        permissionRequired = true
-                        loading = false
-                        return@withContext
-                    }
-                }
+                // Fall back to standard method
                 pm.getInstalledApplications(MATCH_UNINSTALLED_PACKAGES).asFlow()
             }
                 .filter { (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0 }
@@ -228,21 +210,5 @@ class SuperuserViewModel(
         } else {
             updateState()
         }
-    }
-
-    fun requestPermission() {
-        val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            // Android 11+: open app settings page
-            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                data = Uri.parse("package:${AppContext.packageName}")
-            }
-        } else {
-            // Android 10 and below: open app info settings
-            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                data = Uri.parse("package:${AppContext.packageName}")
-            }
-        }
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        AppContext.startActivity(intent)
     }
 }
