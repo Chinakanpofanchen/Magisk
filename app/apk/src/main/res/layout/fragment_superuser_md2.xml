@@ -27,9 +27,7 @@
                 android:layout_margin="@dimen/l1"
                 android:hint="@string/hide_filter_hint"
                 gone="@{viewModel.loading}"
-                app:boxBackgroundMode="outline"
-                app:endIconDrawable="@drawable/ic_search_md2"
-                app:endIconMode="custom">
+                app:boxBackgroundMode="outline">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
