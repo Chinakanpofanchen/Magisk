@@ -29,6 +29,9 @@ jobs:
         with:
           is-asset-build: true
 
+      - name: Clean native build outputs
+        run: rm -rf native/out
+
       - name: Build all
         run: ./build.py -vr all
 
