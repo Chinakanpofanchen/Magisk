@@ -17,7 +17,6 @@ import java.io.File
 import java.security.KeyStore
 import java.security.cert.X509Certificate
 import java.util.jar.JarFile
-import java.util.Date
 
 abstract class AddCommentTask: DefaultTask() {
     @get:Input
@@ -48,7 +47,6 @@ abstract class AddCommentTask: DefaultTask() {
             .setKey(privateKey.privateKey)
             .setCertificates(privateKey.certificate as X509Certificate)
             .setValidation(SigningOptions.Validation.ASSUME_INVALID)
-            .setSigningTimestamps(Date(0)) // Fixed timestamp for reproducible builds
             .build()
         val options = ZFileOptions().apply {
             noTimestamps = true
