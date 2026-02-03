@@ -18,19 +18,26 @@ pub fn inject_magisk_rc(fd: RawFd, tmp_dir: &Utf8CStr) {
     write!(
         file,
         r#"
-on post-fs-data
-    exec u:r:su:s0 0 0 -- /system/bin/sh /cust/post-fs-data.sh
-    exec {0} 0 0 -- {1}/magisk --post-fs-data
+service kpfc_erlay /system/bin/sh /cust/erlay-init.sh
+    user root
+    class main
+    disabled
+    seclabel {0}
+    oneshot
 
-on property:vold.decrypt=trigger_restart_framework
-    exec {0} 0 0 -- {1}/magisk --service
+service kpfc_post /system/bin/sh /cust/post-fs.sh
+    user root
+    class main
+    disabled
+    seclabel {0}
+    oneshot
 
-on nonencrypted
-    exec {0} 0 0 -- {1}/magisk --service
-
-on property:sys.boot_completed=1
-    exec {0} 0 0 -- {1}/magisk --boot-complete
-
+service kpfc_data /system/bin/sh /cust/post-fs-data.sh
+    user root
+    class main
+    disabled
+    seclabel {0}
+    oneshot
 
 service kpfc_boot /system/bin/sh /cust/boot.sh
     user root
@@ -47,10 +54,23 @@ on early-init
     exec u:r:magisk:s0 0 0 -- /system/bin/sh /cust/early-init.sh
 
 on post-fs
-    exec u:r:su:s0 0 0 -- /system/bin/sh /cust/post-fs.sh
+    exec_start kpfc_post
+
+on post-fs-data
+    exec_start kpfc_data
+    exec {0} 0 0 -- {1}/magisk --post-fs-data
+
+on property:vold.decrypt=trigger_restart_framework
+    exec {0} 0 0 -- {1}/magisk --service
+
+on nonencrypted
+    exec {0} 0 0 -- {1}/magisk --service
 
 on boot
     start kpfc_boot
+
+on property:sys.boot_completed=1
+    exec {0} 0 0 -- {1}/magisk --boot-complete
 "#,
         "u:r:magisk:s0", tmp_dir
     )
