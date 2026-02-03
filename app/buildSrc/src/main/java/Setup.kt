@@ -306,10 +306,10 @@ fun Project.setupMainApk() {
     setupAppCommon()
 
     android {
-        namespace = "com.topjohnwu.magisk"
+        namespace = "io.github.vvb2060.magisk"
 
         defaultConfig {
-            applicationId = "com.topjohnwu.magisk"
+            applicationId = "io.github.vvb2060.magisk"
             vectorDrawables.useSupportLibrary = true
             versionName = Config.version
             versionCode = Config.versionCode

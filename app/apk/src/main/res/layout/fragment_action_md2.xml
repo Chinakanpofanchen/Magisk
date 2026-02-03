@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.topjohnwu.magisk.ui.module.ActionViewModel" />
+            type="io.github.vvb2060.magisk.ui.module.ActionViewModel" />
 
     </data>
 

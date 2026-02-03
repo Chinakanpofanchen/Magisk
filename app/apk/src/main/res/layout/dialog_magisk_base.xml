@@ -7,7 +7,7 @@
 
         <variable
             name="data"
-            type="com.topjohnwu.magisk.view.MagiskDialog.Data" />
+            type="io.github.vvb2060.magisk.view.MagiskDialog.Data" />
 
     </data>
 

@@ -27,6 +27,6 @@
 # Excessive obfuscation
 -repackageclasses
 -allowaccessmodification
--keepclassmembers class com.topjohnwu.magisk.dummy.* { <init>(); }
--keepclassmembers class com.topjohnwu.magisk.DownloadActivity { <init>(); }
--keepclassmembers class com.topjohnwu.magisk.StubRootService { <init>(); }
+-keepclassmembers class io.github.vvb2060.magisk.dummy.* { <init>(); }
+-keepclassmembers class io.github.vvb2060.magisk.DownloadActivity { <init>(); }
+-keepclassmembers class io.github.vvb2060.magisk.StubRootService { <init>(); }

@@ -5,7 +5,7 @@
 
         <variable
             name="item"
-            type="com.topjohnwu.magisk.ui.log.LogRvItem" />
+            type="io.github.vvb2060.magisk.ui.log.LogRvItem" />
 
     </data>
 

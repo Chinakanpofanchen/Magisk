@@ -224,7 +224,7 @@ private fun genStubClasses(factoryOutDir: File, appOutDir: File) {
         pkgDir.mkdirs()
         PrintStream(File(pkgDir, "$name.java")).use {
             it.println("package $pkg;")
-            it.println("public class $name extends com.topjohnwu.magisk.$type {}")
+            it.println("public class $name extends io.github.vvb2060.magisk.$type {}")
         }
     }
 
@@ -253,7 +253,7 @@ private fun genEncryptedResources(res: ByteArray, outDir: File) {
     }
 
     PrintStream(File(mainPkgDir, "Bytes.java")).use {
-        it.println("package com.topjohnwu.magisk;")
+        it.println("package io.github.vvb2060.magisk;")
         it.println("public final class Bytes {")
 
         it.byteField("key", key)

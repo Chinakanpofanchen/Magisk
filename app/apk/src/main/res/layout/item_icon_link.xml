@@ -7,11 +7,11 @@
 
         <variable
             name="item"
-            type="com.topjohnwu.magisk.ui.home.IconLink" />
+            type="io.github.vvb2060.magisk.ui.home.IconLink" />
 
         <variable
             name="viewModel"
-            type="com.topjohnwu.magisk.ui.home.HomeViewModel" />
+            type="io.github.vvb2060.magisk.ui.home.HomeViewModel" />
 
     </data>
 

@@ -6,7 +6,7 @@
 
         <variable
             name="item"
-            type="com.topjohnwu.magisk.ui.settings.BaseSettingsItem" />
+            type="io.github.vvb2060.magisk.ui.settings.BaseSettingsItem" />
 
     </data>
 
